@@ -1,14 +1,9 @@
 import mongoose from "mongoose"
-import bcrypt from "bcryptjs"
+import bcrypt from "bcrypt"
 import crypto from "crypto"
 
 const userSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: [true, "Name is required"],
-      trim: true,
-    },
     email: {
       type: String,
       required: [true, "Email is required"],
@@ -33,54 +28,79 @@ const userSchema = new mongoose.Schema(
       },
     },
 
-    isVerified: { type: Boolean, default: false },
-    verifyToken: { type: String, default: null },
-    verifyTokenExpires: { type: Date, default: null },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    verifyToken: {
+      type: String,
+      default: null,
+    },
+    verifyTokenExpires: {
+      type: Date,
+      default: null,
+    },
 
-    resetPasswordToken: { type: String, default: null },
-    resetPasswordExpires: { type: Date, default: null },
+    resetPasswordToken: {
+      type: String,
+      default: null,
+    },
+    resetPasswordExpires: {
+      type: Date,
+      default: null,
+    },
 
-    lastLogin: { type: Date, default: null },
+    lastLogin: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true }
 )
 
+// 🛠 Index untuk email unik (opsional, redundant jika sudah pakai unique: true di schema field)
 userSchema.index({ email: 1 }, { unique: true })
 
+// 🔒 Pre-save: hash password jika berubah
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next()
-  const salt = await bcrypt.genSalt(10)
-  this.password = await bcrypt.hash(this.password, salt)
-  next()
+  try {
+    const salt = await bcrypt.genSalt(10)
+    this.password = await bcrypt.hash(this.password, salt)
+    next()
+  } catch (err) {
+    next(err)
+  }
 })
 
+// ✅ Method: cocokkan password login
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return bcrypt.compare(enteredPassword, this.password)
 }
 
+// ✅ Method: generate verification token
 userSchema.methods.generateVerifyToken = function () {
-  const raw = crypto.randomBytes(32).toString("hex")
-  const hash = crypto.createHash("sha256").update(raw).digest("hex")
-
-  this.verifyToken = hash
-  this.verifyTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 jam default
-  return raw
+  const rawToken = crypto.randomBytes(32).toString("hex")
+  this.verifyToken = crypto.createHash("sha256").update(rawToken).digest("hex")
+  this.verifyTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 jam
+  return rawToken
 }
 
+// ✅ Method: generate reset password token
 userSchema.methods.generateResetPasswordToken = function () {
-  const raw = crypto.randomBytes(32).toString("hex")
-  const hash = crypto.createHash("sha256").update(raw).digest("hex")
-
-  this.resetPasswordToken = hash
-  this.resetPasswordExpires = new Date(Date.now() + 30 * 60 * 1000) // 30 menit default
-  return raw
+  const rawToken = crypto.randomBytes(32).toString("hex")
+  this.resetPasswordToken = crypto.createHash("sha256").update(rawToken).digest("hex")
+  this.resetPasswordExpires = new Date(Date.now() + 30 * 60 * 1000) // 30 menit
+  return rawToken
 }
 
+// ✅ Method: tandai email sudah diverifikasi
 userSchema.methods.markVerified = function () {
   this.isVerified = true
   this.verifyToken = null
   this.verifyTokenExpires = null
 }
+
 
 userSchema.methods.toJSON = function () {
   const obj = this.toObject({ versionKey: false })
@@ -92,5 +112,6 @@ userSchema.methods.toJSON = function () {
   return obj
 }
 
+// ⛓ Export model
 const User = mongoose.model("User", userSchema)
 export default User

@@ -1,12 +1,13 @@
 {
-  "name": "data-driven-project",
+  "name": "joovlink-backend-api",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js"
   },
-  "author": "Septa",
+  "author": "JoovlinkBackendTeam",
   "license": "ISC",
   "description": "",
   "dependencies": {

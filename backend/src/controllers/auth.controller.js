@@ -1,5 +1,5 @@
 import crypto from "crypto"
-import { User } from "../models"
+import { User } from "../models/index.js"
 import { validatePassword } from "../utils/validatePassword.js"
 import {
   sendVerificationEmail,
@@ -12,7 +12,7 @@ import { generateAccessToken } from "../utils/jwt.js"
 // @access  Public
 export const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body
+    const {email, password } = req.body
 
     const userExists = await User.findOne({ email })
     if (userExists) {
@@ -24,7 +24,7 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: result.message })
     }
 
-    const user = new User({ name, email, password })
+    const user = new User({ email, password })
     const rawToken = user.generateVerifyToken()
     await user.save()
 
@@ -102,7 +102,6 @@ export const loginUser = async (req, res) => {
       token,
       user: {
         id: user._id,
-        name: user.name,
         email: user.email,
       },
     })
@@ -148,18 +147,18 @@ export const forgotPassword = async (req, res) => {
 // @access  Public
 export const resetPassword = async (req, res) => {
   try {
-    const { password } = req.body
-    const rawToken = req.query.token
+   
+    const { token, newPassword } = req.body
 
-    if (!rawToken) {
+    if (!token) {
       return res.status(400).json({ message: "Missing token" })
     }
 
-    if (!password) {
+    if (!newPassword) {
       return res.status(400).json({ message: "Password is required" })
     }
 
-    const hashedToken = crypto.createHash("sha256").update(rawToken).digest("hex")
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex")
 
     const user = await User.findOne({
       resetPasswordToken: hashedToken,
@@ -170,12 +169,12 @@ export const resetPassword = async (req, res) => {
       return res.status(400).json({ message: "Invalid or expired token" })
     }
 
-    const result = validatePassword(password, user.email)
+    const result = validatePassword(newPassword, user.email)
     if (!result.success) {
       return res.status(400).json({ message: result.message })
     }
 
-    user.password = password
+    user.password = newPassword
     user.resetPasswordToken = null
     user.resetPasswordExpires = null
 

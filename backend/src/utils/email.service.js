@@ -1,16 +1,22 @@
 import nodemailer from "nodemailer"
+import dotenv from "dotenv"
 
-export const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
-  secure: false, // set to true if using TLS
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-})
+// Pastikan .env diload, hanya jika belum diload di tempat lain
+dotenv.config()
 
-// ✅ Send verification email
+// Fungsi pembuat transporter dinamis (panggil saat kirim email)
+const createTransporter = () =>
+  nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT),
+    secure: Number(process.env.SMTP_PORT) === 465, // true if 465 (SSL)
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  })
+
+// ✅ Kirim email verifikasi
 export const sendVerificationEmail = async (email, token) => {
   const frontendURL = process.env.FRONTEND_URL || "http://localhost:3000"
   const link = `${frontendURL}/verify?token=${token}`
@@ -22,6 +28,7 @@ export const sendVerificationEmail = async (email, token) => {
     <p>Or open this link manually:<br /> ${link}</p>
   `
 
+  const transporter = createTransporter()
   await transporter.sendMail({
     from: `"Joovlink" <${process.env.SMTP_USER}>`,
     to: email,
@@ -30,9 +37,10 @@ export const sendVerificationEmail = async (email, token) => {
   })
 
   console.log(`📬 Verification email sent to ${email}`)
+  console.log(`🔑 Verification token: ${token}`)
 }
 
-// ✅ Send reset password email
+// ✅ Kirim email reset password
 export const sendResetPasswordEmail = async (email, token) => {
   const frontendURL = process.env.FRONTEND_URL || "http://localhost:3000"
   const link = `${frontendURL}/reset-password?token=${token}`
@@ -44,6 +52,7 @@ export const sendResetPasswordEmail = async (email, token) => {
     <p>Or open this link manually:<br /> ${link}</p>
   `
 
+  const transporter = createTransporter()
   await transporter.sendMail({
     from: `"Joovlink" <${process.env.SMTP_USER}>`,
     to: email,
