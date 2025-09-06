@@ -1,11 +1,11 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
 
-const personalSchema = new mongoose.Schema(
+const profileSchema = new mongoose.Schema(
   {
     fullName: {
       type: String,
       required: true,
-      trim: true, //buat ngilangin spasi di string biar rapih
+      trim: true,
     },
     bornPlace: {
       type: String,
@@ -23,7 +23,7 @@ const personalSchema = new mongoose.Schema(
       required: true,
       validate: {
         validator: function (num) {
-          return /^\+62\d{8,13}$/.test(num); //awali dengan +62, dilanjut /d = digit (0-9) dengan range 8-13 angka
+          return /^\+62\d{8,13}$/.test(num)
         },
         message: (props) => `${props.value} bukan nomor telepon yang valid!`,
       },
@@ -78,8 +78,8 @@ const personalSchema = new mongoose.Schema(
     ],
   },
   { timestamps: true }
-);
+)
 
-const personalData = mongoose.model("PersonalData", personalSchema);
+const Profile = mongoose.model("Profile", profileSchema)
 
-export default personalData;
+export default Profile
