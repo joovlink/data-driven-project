@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  web:
+    container_name: nextjs
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nextjs.rule=Host(`localhost`) || PathPrefix(`/`)"
+      - "traefik.http.routers.nextjs.entrypoints=web"
+      - "traefik.http.services.nextjs.loadbalancer.server.port=3000"
+    networks:
+      - backend
+
+networks:
+  backend:
+    name: backend_backend # ⬅️ tambahin ini biar cocok sama jaringan backend lu
+    external: true
