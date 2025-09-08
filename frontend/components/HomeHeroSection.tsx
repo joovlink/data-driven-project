@@ -70,17 +70,29 @@ export default function HomeHeroSection() {
                 initial="hidden"
                 animate="show"
             >
-                <Link href="/" className="inline-block">
-                    <Image
-                        src="/images/joovlink_logo.png"
-                        alt="Joovlink Logo"
-                        width={100}
-                        height={40}
-                        priority
-                        className="invert brightness-0"
-                    />
-                </Link>
-                <nav className="flex items-center gap-6 text-white">
+                {/* Left: Logo + Nav items */}
+                <div className="flex items-center gap-4 h-[40px]">
+                    <Link href="/" className="inline-block">
+                        <Image
+                            src="/images/joovlink_logo.png"
+                            alt="Joovlink Logo"
+                            width={100}
+                            height={40}
+                            priority
+                            className="invert brightness-0"
+                        />
+                    </Link>
+
+                    {/* Nav Links */}
+                    <nav className="hidden md:flex items-center pt-2 gap-2 text-white text-md">
+                        <span className="opacity-50">▸</span>
+                        <Link href="/career" className="hover:text-teal-300 transition">Career</Link>
+                        <span className="opacity-50">|</span>
+                        <Link href="/companies" className="hover:text-teal-300 transition">Companies</Link>
+                    </nav>
+                </div>
+
+                <nav className="flex items-center pt-2 gap-6 text-white">
                     <Link href="/login" className="hover:text-teal-300 transition">
                         Login
                     </Link>
