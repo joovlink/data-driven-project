@@ -8,7 +8,7 @@ export default function AfterLoginPage() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        const t = setTimeout(() => setLoading(false), 2000) // splash 2 detik
+        const t = setTimeout(() => setLoading(false), 2000) 
         return () => clearTimeout(t)
     }, [])
 
