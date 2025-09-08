@@ -25,10 +25,10 @@ export const registerUser = async (req, res) => {
     }
 
     const user = new User({ email, password })
-    const rawToken = user.generateVerifyToken()
+    const token = user.generateVerifyToken()
     await user.save()
 
-    await sendVerificationEmail(email, rawToken)
+    await sendVerificationEmail(email, token)
 
     return res.status(201).json({
       success: true,
@@ -43,36 +43,51 @@ export const registerUser = async (req, res) => {
 // @desc    Verify email
 // @route   GET /api/auth/verify
 // @access  Public
+// @desc    Verify email
+// @route   GET /api/auth/verify
+// @access  Public
 export const verifyEmail = async (req, res) => {
   try {
-    const rawToken = req.query.token
-    if (!rawToken) {
-      return res.status(400).json({ message: "Missing token" })
+    const token = (req.query.token ?? "").toString().trim();
+    if (!token) {
+      return res.status(400).json({ message: "Missing token" });
     }
 
-    const hashed = crypto.createHash("sha256").update(rawToken).digest("hex")
-
-    const user = await User.findOne({
-      verifyToken: hashed,
-      verifyTokenExpires: { $gt: Date.now() },
-    })
+    // Cari user berdasarkan token plain saja
+    const user = await User.findOne({ verifyToken: token });
 
     if (!user) {
-      return res.status(400).json({ message: "Invalid or expired token" })
+      return res.status(400).json({ message: "Invalid or expired token" });
     }
 
-    user.markVerified()
-    await user.save()
+    // Kalau sudah verified, tetap return 200 (idempotent)
+    if (user.isVerified) {
+      return res.status(200).json({
+        success: true,
+        message: "Account already verified.",
+      });
+    }
+
+    // Cek apakah token sudah expired
+    if (!user.verifyTokenExpires || user.verifyTokenExpires < new Date()) {
+      return res.status(400).json({ message: "Token expired" });
+    }
+
+    // Tandai user sebagai verified (token tetap disimpan)
+    user.isVerified = true;
+    await user.save();
 
     return res.status(200).json({
       success: true,
       message: "Email verified successfully",
-    })
+    });
   } catch (err) {
-    console.error("❌ Verify Email Error:", err.message)
-    return res.status(500).json({ message: "Server error" })
+    console.error("❌ Verify Email Error:", err);
+    return res.status(500).json({ message: "Server error" });
   }
-}
+};
+
+
 
 // @desc    Login user
 // @route   POST /api/auth/login
@@ -127,10 +142,10 @@ export const forgotPassword = async (req, res) => {
       return res.status(200).json({ message: "If that email exists, a reset link has been sent." })
     }
 
-    const rawToken = user.generateResetPasswordToken()
+    const token = user.generateResetPasswordToken()
     await user.save()
 
-    await sendResetPasswordEmail(user.email, rawToken)
+    await sendResetPasswordEmail(user.email, token)
 
     return res.status(200).json({
       success: true,
@@ -189,3 +204,93 @@ export const resetPassword = async (req, res) => {
     return res.status(500).json({ message: "Server error" })
   }
 }
+
+
+// @desc    Resend verification email by email
+// @route   POST /api/auth/resend-verification
+// @access  Public
+
+export const resendVerification = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email || typeof email !== "string") {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+    const user = await User.findOne({ email: normalizedEmail });
+
+    // Anti user-enumeration → tetap balas 200 meskipun email tidak ada
+    if (!user) {
+      return res.status(200).json({
+        success: true,
+        message:
+          "If an account exists for this email, a new verification link has been sent.",
+      });
+    }
+
+    if (user.isVerified) {
+      return res.status(200).json({
+        success: true,
+        message: "Account is already verified.",
+      });
+    }
+
+    // Generate verify token baru
+    const token = user.generateVerifyToken();
+    await user.save();
+
+    // Kirim email
+    await sendVerificationEmail(user.email, token);
+
+    return res.status(200).json({
+      success: true,
+      message: "Verification email has been resent.",
+    });
+  } catch (err) {
+    console.error("❌ Resend Verification Error:", err);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+// @desc    Resend verification email
+// @route   POST /api/auth/resend-verification-by-token
+// @access  Public
+export const resendVerificationByToken = async (req, res) => {
+  try {
+    const { token } = req.body;
+
+    if (!token) {
+      return res.status(400).json({ message: "Missing token" });
+    }
+
+    // Cari user berdasarkan verifyToken (abaikan expiry)
+    const user = await User.findOne({ verifyToken: token });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid token" });
+    }
+
+    if (user.isVerified) {
+      return res.status(200).json({
+        success: true,
+        message: "Account is already verified.",
+      });
+    }
+
+    // Generate token baru dan simpan
+    const newToken = user.generateVerifyToken();
+    await user.save();
+
+    // Kirim email verifikasi baru
+    await sendVerificationEmail(user.email, newToken);
+
+    return res.status(200).json({
+      success: true,
+      message: "Verification email has been resent.",
+    });
+  } catch (err) {
+    console.error("❌ Resend Verification Error:", err.message);
+    return res.status(500).json({ message: "Server error" });
+  }
+};

@@ -7,6 +7,10 @@ import {
     ForgotPasswordResponse,
     ResetPasswordPayload,
     ResetPasswordResponse,
+    VerifyResponse,
+    ResendVerificationPayload,
+    ResendVerificationResponse,
+    ResendVerificationByTokenPayload,
 } from "@/types/auth"
 
 // POST /api/auth/login
@@ -15,11 +19,11 @@ export async function login(payload: LoginPayload): Promise<LoginResponse> {
     return response.data
 }
 
-// // POST /api/auth/register
-// export async function register(payload: RegisterPayload): Promise<any> {
-//     const response = await api.post("/auth/register", payload)
-//     return response.data
-// }
+// POST /api/auth/register
+export async function register(payload: RegisterPayload): Promise<any> {
+    const response = await api.post("/auth/register", payload)
+    return response.data
+}
 
 // POST /api/auth/forgot-password
 export async function forgotPassword(
@@ -58,3 +62,64 @@ export async function logout() {
 }
 
 
+
+export async function verifyEmail(token: string): Promise<VerifyResponse> {
+    try {
+        const res = await api.get("/auth/verify", { params: { token } });
+        console.log("✅ VERIFY RESPONSE:", res.data);
+
+        const isSuccess =
+            res.data?.success === true ||
+            res.data?.message?.toLowerCase().includes("already verified");
+
+        return {
+            status: isSuccess ? "success" : "error",
+            message: res.data?.message ?? "Unknown response",
+        };
+    } catch (err: unknown) {
+        const e = err as { response?: { data?: { message?: string } } };
+        return {
+            status: "error",
+            message: e.response?.data?.message ?? "Verification failed",
+        };
+    }
+}
+
+// POST /api/auth/resend-verification { email }
+export async function resendVerification(
+    payload: ResendVerificationPayload
+): Promise<ResendVerificationResponse> {
+    try {
+        const res = await api.post("/auth/resend-verification", payload)
+        return {
+            status: res.data?.success ? "success" : "error",
+            message: res.data?.message ?? "Unknown response",
+        }
+    } catch (err: unknown) {
+        const e = err as { response?: { data?: { message?: string } } }
+        return {
+            status: "error",
+            message: e.response?.data?.message ?? "Something went wrong",
+        }
+    }
+}
+
+// POST /api/auth/resend-verification-by-token  { token }
+export async function resendVerificationByToken(
+    payload: ResendVerificationByTokenPayload
+): Promise<ResendVerificationResponse> {
+    try {
+        const res = await api.post("/auth/resend-verification-by-token", payload);
+        // BE: { success: true, message: "..." }
+        return {
+            status: res.data?.success ? "success" : "error",
+            message: res.data?.message ?? "Unknown response",
+        };
+    } catch (err: unknown) {
+        const e = err as { response?: { data?: { message?: string } } };
+        return {
+            status: "error",
+            message: e.response?.data?.message ?? "Something went wrong",
+        };
+    }
+}

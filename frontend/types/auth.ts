@@ -1,24 +1,24 @@
 export interface LoginPayload {
-    username: string
+    email: string
     password: string
     remember: boolean
 }
 
 export interface LoginResponse {
-    account_id: string
-    username: string
-    role: string
+    id: string
+    email: string
+    token: string
 }
 
 export interface RegisterPayload {
-    username: string
+
     email: string
     password: string
 }
 
 
 export interface ForgotPasswordResponse {
-    status: "success" | "error" | "not_found" | "too_soon" 
+    status: "success" | "error" | "not_found" | "too_soon"
     message: string
 }
 
@@ -32,7 +32,25 @@ export interface ResetPasswordPayload {
 }
 
 export interface ResetPasswordResponse {
-    status: "success" | "error" | "not_found" | "expired" 
+    status: "success" | "error" | "not_found" | "expired"
     message: string
 }
 
+export interface VerifyResponse {
+    status: "success" | "error"
+    message: string
+}
+
+
+export interface ResendVerificationPayload {
+    email: string
+}
+
+export interface ResendVerificationByTokenPayload {
+    token: string
+}
+
+export interface ResendVerificationResponse {
+    status: "success" | "error"
+    message: string
+}

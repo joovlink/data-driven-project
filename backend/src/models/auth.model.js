@@ -80,25 +80,23 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 
 // ✅ Method: generate verification token
 userSchema.methods.generateVerifyToken = function () {
-  const rawToken = crypto.randomBytes(32).toString("hex")
-  this.verifyToken = crypto.createHash("sha256").update(rawToken).digest("hex")
+  const token = crypto.randomBytes(32).toString("hex")
+  this.verifyToken = token
   this.verifyTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 jam
-  return rawToken
+  return token
 }
 
 // ✅ Method: generate reset password token
 userSchema.methods.generateResetPasswordToken = function () {
-  const rawToken = crypto.randomBytes(32).toString("hex")
-  this.resetPasswordToken = crypto.createHash("sha256").update(rawToken).digest("hex")
+  const token = crypto.randomBytes(32).toString("hex")
+  this.resetPasswordToken = token
   this.resetPasswordExpires = new Date(Date.now() + 30 * 60 * 1000) // 30 menit
-  return rawToken
+  return token
 }
 
 // ✅ Method: tandai email sudah diverifikasi
 userSchema.methods.markVerified = function () {
   this.isVerified = true
-  this.verifyToken = null
-  this.verifyTokenExpires = null
 }
 
 
