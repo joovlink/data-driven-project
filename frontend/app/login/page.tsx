@@ -84,11 +84,13 @@ export default function LoginPage() {
       {/* ===== PANEL KIRI (FORM) ===== */}
       <div className="relative z-10 h-screen flex flex-col justify-center w-[25%] space-y-4 px-10 bg-[#F7F7F7]">
         <div className="space-y-1">
-          <img
-            src="/images/joovlink_logo.png"
-            alt="Joovlink Logo"
-            className="h-10 pr-4"
-          />
+          <Link href="/" className="inline-block">
+            <img
+              src="/images/joovlink_logo.png"
+              alt="Joovlink Logo"
+              className="h-10 pr-4 cursor-pointer"
+            />
+          </Link>
           <p className="text-xs font-semibold text-gray-900">
             Log in to your account using your credentials.
           </p>

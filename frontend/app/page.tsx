@@ -3,8 +3,11 @@
 import { useEffect, useState } from "react"
 import { AnimatePresence } from "framer-motion"
 import SplashScreen from "@/components/SplashScreen"
+import HomeHeroSection from "@/components/HomeHeroSection"
+import ASSAHeroSection from "@/components/ASSAHeroSection"
 
-export default function AfterLoginPage() {
+
+export default function HomePage() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -13,23 +16,18 @@ export default function AfterLoginPage() {
     }, [])
 
     return (
-        <div className="relative w-screen h-screen overflow-hidden">
+        <div className="relative w-screen h-screen">
             <AnimatePresence mode="wait">
                 {loading ? (
                     <SplashScreen key="splash" />
                 ) : (
-                    <VideoScreen key="video" />
+                    <div key="landing" className="flex flex-col">
+                        <HomeHeroSection />
+                        <ASSAHeroSection />
+                    </div>
                 )}
             </AnimatePresence>
         </div>
     )
 }
 
-// contoh dummy VideoScreen, nanti bisa kamu pisahin juga kalau mau
-function VideoScreen() {
-    return (
-        <div className="w-full h-full flex items-center justify-center bg-black text-white">
-            Video Screen
-        </div>
-    )
-}
