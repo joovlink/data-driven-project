@@ -26,19 +26,27 @@ export async function register(payload: RegisterPayload): Promise<any> {
 }
 
 // POST /api/auth/forgot-password
+
 export async function forgotPassword(
     payload: ForgotPasswordPayload
 ): Promise<ForgotPasswordResponse> {
     try {
         const response = await api.post("/auth/forgot-password", payload)
-        return response.data
+        const data = response.data
+
+        return {
+            status: data.status ?? "success",
+            message: data.message ?? "If that email exists, a reset link has been sent.",
+        }
     } catch (err: any) {
-        return err?.response?.data || {
-            status: "error",
-            message: "Unexpected error",
+        const data = err?.response?.data
+        return {
+            status: data?.status ?? "error",
+            message: data?.message ?? "Unexpected error",
         }
     }
 }
+
 
 // POST /api/auth/reset-password
 export async function resetPassword(

@@ -32,7 +32,7 @@ export interface ResetPasswordPayload {
 }
 
 export interface ResetPasswordResponse {
-    status: "success" | "error" | "not_found" | "expired"
+    status: "idle" | "success" | "invalid" | "expired" | "error" | "not_found" | "unverified"
     message: string
 }
 

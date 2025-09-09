@@ -131,29 +131,43 @@ export const loginUser = async (req, res) => {
 // @access  Public
 export const forgotPassword = async (req, res) => {
   try {
-    const { email } = req.body
-
+    const { email } = req.body || {}
     if (!email) {
-      return res.status(400).json({ message: "Email is required" })
+      return res.status(400).json({ status: "error", message: "Email is required" })
     }
 
     const user = await User.findOne({ email })
+    const COOLDOWN_SEC = 60
+
     if (!user) {
-      return res.status(200).json({ message: "If that email exists, a reset link has been sent." })
+      return res.status(404).json({ status: "not_found", message: "Email not found" })
+    }
+
+    const now = Date.now()
+    if (user.resetRequestedAt) {
+      const diffSec = Math.floor((now - new Date(user.resetRequestedAt).getTime()) / 1000)
+      if (diffSec < COOLDOWN_SEC) {
+        return res.status(429).json({
+          status: "too_soon",
+          message: `Please wait ${COOLDOWN_SEC - diffSec}s before retrying.`,
+          retry_after: COOLDOWN_SEC - diffSec,
+        })
+      }
     }
 
     const token = user.generateResetPasswordToken()
+    user.resetRequestedAt = new Date()
     await user.save()
 
     await sendResetPasswordEmail(user.email, token)
 
     return res.status(200).json({
-      success: true,
+      status: "success",
       message: "If that email exists, a reset link has been sent.",
     })
   } catch (err) {
-    console.error("❌ Forgot Password Error:", err.message)
-    return res.status(500).json({ message: "Server error" })
+    console.error("❌ Forgot Password Error:", err)
+    return res.status(500).json({ status: "error", message: "Server error" })
   }
 }
 

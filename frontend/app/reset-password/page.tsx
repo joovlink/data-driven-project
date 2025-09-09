@@ -5,11 +5,15 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 import { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { resetPassword } from "@/lib/api/auth"
 import { Eye, EyeOff } from "lucide-react"
 import useHydrated from "@/hooks/useHydrated"
+
+import { AnimatePresence, motion } from "framer-motion"
+import SplashScreen from "@/components/SplashScreen"
 
 const schema = z
     .object({
@@ -29,13 +33,19 @@ const schema = z
 type FormData = z.infer<typeof schema>
 
 export default function ResetPasswordPage() {
-    const [showPassword, setShowPassword] = useState(false)
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const router = useRouter()
+    const hydrated = useHydrated()
     const searchParams = useSearchParams()
     const code = searchParams.get("code")
-    const hydrated = useHydrated()
 
+    // === Splash state (match Forgot Password) ===
+    const [loadingSplash, setLoadingSplash] = useState(true)
+    useEffect(() => {
+        const t = setTimeout(() => setLoadingSplash(false), 2000)
+        return () => clearTimeout(t)
+    }, [])
+
+    // === Page states (match Forgot Password style) ===
     const [statusFlag, setStatusFlag] = useState<
         "idle" | "success" | "invalid" | "expired" | "error" | "not_found" | "unverified"
     >("idle")
@@ -50,6 +60,9 @@ export default function ResetPasswordPage() {
         mode: "onChange",
     })
 
+    const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+
     const onSubmit = async (data: FormData) => {
         if (!code) {
             setStatusFlag("invalid")
@@ -57,134 +70,225 @@ export default function ResetPasswordPage() {
         }
 
         setLoading(true)
-
-        const res = await resetPassword({
-            token: code,
-            password: data.password,
-        })
-
-        await new Promise((resolve) => setTimeout(resolve, 3000))
-
-        setStatusFlag(res.status) // kalau mau bisa juga simpan res.message
-        setLoading(false)
+        try {
+            const res = await resetPassword({
+                token: code,
+                password: data.password,
+            })
+            // samain feel loading singkat kayak Forgot Password
+            await new Promise((r) => setTimeout(r, 800))
+            setStatusFlag(res.status)
+        } catch {
+            setStatusFlag("error")
+        } finally {
+            setLoading(false)
+        }
     }
 
     if (!hydrated) return null
 
     return (
-        <div
-            className="relative min-h-screen bg-cover bg-center flex items-center justify-center"
-            style={{ backgroundImage: 'url("/images/background.jpg")' }}
-        >
-            <div className="flex flex-col items-center justify-between min-h-screen space-y-6 py-10">
-                <img
-                    src="/images/scbddc_logo.png"
-                    alt="SCBD Data Center Logo"
-                    className="h-20 w-auto filter brightness-0 invert contrast-200"
-                />
-
-                <div className="min-h-[18vh] w-[380px] space-y-4 rounded-2xl bg-[#261D1D]/40 text-white mt-2 px-10 py-6 shadow-lg">
-                    {loading ? (
-                        <div className="flex flex-col items-center space-y-4 text-center">
-                            <div className="animate-spin rounded-full border-4 border-gray-300 border-t-blue-500 h-8 w-8" />
-                            <p className="text-sm font-semibold">Resetting password...</p>
-                        </div>
-                    ) : statusFlag === "success" ? (
-                        <div className="text-center space-y-4">
-                            <h2 className="text-lg font-bold text-green-600">Success</h2>
-                            <p className="text-xs font-semibold">
-                                Your password has been successfully updated.
-                            </p>
-                            <Button onClick={() => router.push("/")} className="w-full bg-[#0071BB] text-white text-sm">
-                                Go to Login
-                            </Button>
-                        </div>
-                    ) : statusFlag === "expired" ? (
-                        <div className="text-center space-y-4">
-                            <h2 className="text-lg font-bold text-yellow-600">Code Expired</h2>
-                            <p className="text-xs font-semibold">The reset code has expired. Please request a new one.</p>
-
-                            <Button onClick={() => router.push("/")} className="w-full bg-[#0071BB] text-white text-sm">
-                                Go to Login
-                            </Button>
-                        </div>
-                    ) : statusFlag === "not_found" ? (
-                        <div className="text-center space-y-4">
-                            <h2 className="text-lg font-bold text-red-600">Invalid Code</h2>
-                            <p className="text-xs font-semibold">The reset code is invalid or already used.</p>
-                            <Button onClick={() => router.push("/")} className="w-full bg-[#0071BB] text-white text-sm">
-                                Go to Login
-                            </Button>
-                        </div>
-                    ) : statusFlag === "error" ? (
-                        <div className="text-center space-y-4">
-                            <h2 className="text-lg font-bold text-red-600">Something went wrong</h2>
-                            <p className="text-xs font-semibold">Unable to reset password. Please try again.</p>
-                            <Button onClick={() => router.push("/")} className="w-full bg-[#0071BB] text-white text-sm">
-                                Go to Login
-                            </Button>
-                        </div>
-                    ) : (
-                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                            <div>
-                                <h2 className="text-xl font-bold">Reset Password</h2>
-                                <p className="text-xs text-gray-300">Enter your new password below.</p>
-                            </div>
-
-                            <div className="space-y-1 relative">
-                                <label className="text-xs font-medium">New Password</label>
-                                <Input
-                                    type={showPassword ? "text" : "password"}
-                                    placeholder="Enter new password"
-                                    {...register("password")}
-                                    className="pr-10"
+        <div className="relative w-screen h-screen overflow-hidden">
+            <AnimatePresence mode="wait">
+                {loadingSplash ? (
+                    <SplashScreen key="splash" />
+                ) : (
+                    <motion.div
+                        key="page"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.5, ease: "easeOut" }}
+                        className="relative min-h-screen bg-cover bg-center flex items-center justify-center"
+                        style={{ backgroundImage: 'url("/images/background.jpg")' }}
+                    >
+                        <div className="flex flex-col items-center justify-center min-h-screen space-y-6 py-10">
+                            <div className="min-h-[18vh] w-[380px] space-y-4 rounded-2xl bg-white mt-2 px-10 py-6 shadow-lg">
+                                <img
+                                    src="/images/joovlink_logo.png"
+                                    alt="Joovlink Logo"
+                                    className="h-10 auto"
                                 />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-[34px] text-gray-500 hover:text-gray-700"
-                                >
-                                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                                </button>
-                                {errors.password && (
-                                    <p className="text-xs text-red-500">{errors.password.message}</p>
+
+                                {loading ? (
+                                    <div className="flex flex-col items-center space-y-4 text-center">
+                                        <div className="animate-spin rounded-full border-4 border-gray-300 border-t-blue-500 h-8 w-8" />
+                                        <p className="text-sm font-semibold">Resetting password...</p>
+                                    </div>
+                                ) : statusFlag === "success" ? (
+                                    <div className="flex flex-col space-y-4 text-center">
+                                        <h2 className="text-lg font-bold text-green-600">Success!</h2>
+                                        <p className="font-semibold text-xs">
+                                            Your password has been successfully updated.
+                                        </p>
+                                        <Button
+                                            onClick={() => router.push("/")}
+                                            className="w-full h-[36px] bg-[#0071BB] text-white text-sm"
+                                        >
+                                            Go to Login
+                                        </Button>
+                                    </div>
+                                ) : statusFlag === "expired" ? (
+                                    <div className="flex flex-col space-y-4 text-center">
+                                        <h2 className="text-lg font-bold text-yellow-600">Code Expired</h2>
+                                        <p className="font-semibold text-xs">
+                                            The reset code has expired. Please request a new one.
+                                        </p>
+                                        <Button
+                                            onClick={() => router.push("/")}
+                                            className="w-full h-[36px] bg[#0071BB] text-white text-sm"
+                                        >
+                                            Go to Login
+                                        </Button>
+                                    </div>
+                                ) : statusFlag === "not_found" ? (
+                                    <div className="flex flex-col space-y-4 text-center">
+                                        <h2 className="text-lg font-bold text-red-600">Invalid Code</h2>
+                                        <p className="font-semibold text-xs">
+                                            The reset code is invalid or already used.
+                                        </p>
+                                        <Button
+                                            onClick={() => router.push("/")}
+                                            className="w-full h-[36px] bg-[#0071BB] text-white text-sm"
+                                        >
+                                            Go to Login
+                                        </Button>
+                                    </div>
+                                ) : statusFlag === "invalid" ? (
+                                    <div className="flex flex-col space-y-4 text-center">
+                                        <h2 className="text-lg font-bold text-red-600">Invalid Request</h2>
+                                        <p className="font-semibold text-xs">
+                                            Missing or invalid reset token. Please use the latest link from your email.
+                                        </p>
+                                        <Link href="/">
+                                            <p className="text-sm font-light text-center mt-4 text-gray-800">
+                                                <span className="font-medium text-blue-500 hover:underline">
+                                                    Back to Login
+                                                </span>
+                                            </p>
+                                        </Link>
+                                    </div>
+                                ) : statusFlag === "unverified" ? (
+                                    <div className="flex flex-col space-y-4 text-center">
+                                        <h2 className="text-lg font-bold text-yellow-600">Email Not Verified</h2>
+                                        <p className="font-semibold text-xs">
+                                            Please verify your email before resetting the password.
+                                        </p>
+                                        <Link href="/">
+                                            <p className="text-sm font-light text-center mt-4 text-gray-800">
+                                                <span className="font-medium text-blue-500 hover:underline">
+                                                    Back to Login
+                                                </span>
+                                            </p>
+                                        </Link>
+                                    </div>
+                                ) : statusFlag === "error" ? (
+                                    <div className="flex flex-col space-y-4 text-center">
+                                        <h2 className="text-lg font-bold text-red-600">Something went wrong</h2>
+                                        <p className="font-semibold text-xs">
+                                            Unable to reset password. Please try again.
+                                        </p>
+                                        <Link href="/">
+                                            <p className="text-sm font-light text-center mt-4 text-gray-800">
+                                                <span className="font-medium text-blue-500 hover:underline">
+                                                    Back to Login
+                                                </span>
+                                            </p>
+                                        </Link>
+                                    </div>
+                                ) : (
+                                    // ======= FORM (hanya bagian ini yang beda dari Forgot Password) =======
+                                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                                        <div>
+                                            <h2 className="text-xl font-bold">Reset Password</h2>
+                                            <p className="text-xs text-gray-700">
+                                                Enter your new password below.
+                                            </p>
+                                        </div>
+
+                                        <div className="space-y-1 relative">
+                                            <label className="text-xs font-medium" htmlFor="password">
+                                                New Password
+                                                <span className="text-red-500 ml-0.5">*</span>
+                                            </label>
+                                            <Input
+                                                id="password"
+                                                type={showPassword ? "text" : "password"}
+                                                placeholder="Enter new password"
+                                                className="pr-10"
+                                                {...register("password")}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPassword((s) => !s)}
+                                                className="absolute right-3 top-[34px] text-gray-500 hover:text-gray-700"
+                                            >
+                                                {showPassword ? (
+                                                    <EyeOff className="h-4 w-4" />
+                                                ) : (
+                                                    <Eye className="h-4 w-4" />
+                                                )}
+                                            </button>
+                                            {errors.password && (
+                                                <p className="text-xs text-red-500">
+                                                    {errors.password.message}
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        <div className="space-y-1 relative">
+                                            <label className="text-xs font-medium" htmlFor="confirmPassword">
+                                                Confirm Password
+                                                <span className="text-red-500 ml-0.5">*</span>
+                                            </label>
+                                            <Input
+                                                id="confirmPassword"
+                                                type={showConfirmPassword ? "text" : "password"}
+                                                placeholder="Re-enter new password"
+                                                className="pr-10"
+                                                {...register("confirmPassword")}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowConfirmPassword((s) => !s)}
+                                                className="absolute right-3 top-[34px] text-gray-500 hover:text-gray-700"
+                                            >
+                                                {showConfirmPassword ? (
+                                                    <EyeOff className="h-4 w-4" />
+                                                ) : (
+                                                    <Eye className="h-4 w-4" />
+                                                )}
+                                            </button>
+                                            {errors.confirmPassword && (
+                                                <p className="text-xs text-red-500">
+                                                    {errors.confirmPassword.message}
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        <Button
+                                            type="submit"
+                                            disabled={isSubmitting}
+                                            className="h-[36px] w-full bg-[#03314B] hover:bg-[#011926] rounded-md text-sm"
+                                        >
+                                            {isSubmitting ? "Resetting..." : "Reset Password"}
+                                        </Button>
+
+                                        <Link href="/login">
+                                            <p className="text-sm font-light text-center mt-4 text-gray-800">
+                                                Remember your password?{" "}
+                                                <span className="font-medium text-blue-500 hover:underline">
+                                                    Sign in
+                                                </span>
+                                            </p>
+                                        </Link>
+                                    </form>
                                 )}
                             </div>
-
-                            <div className="space-y-1 relative">
-                                <label className="text-xs font-medium">Confirm Password</label>
-                                <Input
-                                    type={showConfirmPassword ? "text" : "password"}
-                                    placeholder="Re-enter new password"
-                                    {...register("confirmPassword")}
-                                    className="pr-10"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    className="absolute right-3 top-[34px] text-gray-500 hover:text-gray-700"
-                                >
-                                    {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                                </button>
-                                {errors.confirmPassword && (
-                                    <p className="text-xs text-red-500">{errors.confirmPassword.message}</p>
-                                )}
-                            </div>
-                            <Button
-                                type="submit"
-                                disabled={isSubmitting}
-                                className="h-[36px] w-full bg-[#0071BB] text-sm"
-                            >
-                                {isSubmitting ? "Resetting..." : "Reset Password"}
-                            </Button>
-                        </form>
-                    )}
-                </div>
-
-                <p className="text-xs font-light text-center text-gray-300">
-                    ©2025 Arthatel. All right reserved.
-                </p>
-            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     )
 }
