@@ -36,7 +36,7 @@ export default function ResetPasswordPage() {
     const router = useRouter()
     const hydrated = useHydrated()
     const searchParams = useSearchParams()
-    const code = searchParams.get("code")
+    const token = searchParams.get("token")
 
     // === Splash state (match Forgot Password) ===
     const [loadingSplash, setLoadingSplash] = useState(true)
@@ -64,7 +64,7 @@ export default function ResetPasswordPage() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
     const onSubmit = async (data: FormData) => {
-        if (!code) {
+        if (!token) {
             setStatusFlag("invalid")
             return
         }
@@ -72,7 +72,7 @@ export default function ResetPasswordPage() {
         setLoading(true)
         try {
             const res = await resetPassword({
-                token: code,
+                token: token,
                 password: data.password,
             })
             // samain feel loading singkat kayak Forgot Password
@@ -111,85 +111,83 @@ export default function ResetPasswordPage() {
                                 />
 
                                 {loading ? (
-                                    <div className="flex flex-col items-center space-y-4 text-center">
+                                    <div className="flex flex-col items-center space-y-4 ">
                                         <div className="animate-spin rounded-full border-4 border-gray-300 border-t-blue-500 h-8 w-8" />
                                         <p className="text-sm font-semibold">Resetting password...</p>
                                     </div>
                                 ) : statusFlag === "success" ? (
-                                    <div className="flex flex-col space-y-4 text-center">
+                                    <div className="flex flex-col space-y-4 ">
                                         <h2 className="text-lg font-bold text-green-600">Success!</h2>
                                         <p className="font-semibold text-xs">
                                             Your password has been successfully updated.
                                         </p>
                                         <Button
-                                            onClick={() => router.push("/")}
-                                            className="w-full h-[36px] bg-[#0071BB] text-white text-sm"
+                                            onClick={() => router.push("/login")}
+                                            className="w-full h-[36px] bg-[#03314B] hover:bg-[#011926] text-white text-sm"
                                         >
                                             Go to Login
                                         </Button>
                                     </div>
                                 ) : statusFlag === "expired" ? (
-                                    <div className="flex flex-col space-y-4 text-center">
+                                    <div className="flex flex-col space-y-4 ">
                                         <h2 className="text-lg font-bold text-yellow-600">Code Expired</h2>
                                         <p className="font-semibold text-xs">
                                             The reset code has expired. Please request a new one.
                                         </p>
                                         <Button
-                                            onClick={() => router.push("/")}
+                                            onClick={() => router.push("/login")}
                                             className="w-full h-[36px] bg[#0071BB] text-white text-sm"
                                         >
                                             Go to Login
                                         </Button>
                                     </div>
                                 ) : statusFlag === "not_found" ? (
-                                    <div className="flex flex-col space-y-4 text-center">
+                                    <div className="flex flex-col space-y-4 ">
                                         <h2 className="text-lg font-bold text-red-600">Invalid Code</h2>
                                         <p className="font-semibold text-xs">
                                             The reset code is invalid or already used.
                                         </p>
                                         <Button
-                                            onClick={() => router.push("/")}
-                                            className="w-full h-[36px] bg-[#0071BB] text-white text-sm"
+                                            onClick={() => router.push("/login")}
+                                            className="w-full h-[36px] bg-[#03314B] hover:bg-[#011926] text-white text-sm"
                                         >
                                             Go to Login
                                         </Button>
                                     </div>
                                 ) : statusFlag === "invalid" ? (
-                                    <div className="flex flex-col space-y-4 text-center">
+                                    <div className="flex flex-col space-y-4 ">
                                         <h2 className="text-lg font-bold text-red-600">Invalid Request</h2>
                                         <p className="font-semibold text-xs">
                                             Missing or invalid reset token. Please use the latest link from your email.
                                         </p>
-                                        <Link href="/">
-                                            <p className="text-sm font-light text-center mt-4 text-gray-800">
-                                                <span className="font-medium text-blue-500 hover:underline">
-                                                    Back to Login
-                                                </span>
-                                            </p>
-                                        </Link>
+                                        <Button
+                                            onClick={() => router.push("/login")}
+                                            className="w-full h-[36px] bg-[#03314B] hover:bg-[#011926] text-white text-sm"
+                                        >
+                                            Go to Login
+                                        </Button>
                                     </div>
                                 ) : statusFlag === "unverified" ? (
-                                    <div className="flex flex-col space-y-4 text-center">
+                                    <div className="flex flex-col space-y-4 ">
                                         <h2 className="text-lg font-bold text-yellow-600">Email Not Verified</h2>
                                         <p className="font-semibold text-xs">
                                             Please verify your email before resetting the password.
                                         </p>
-                                        <Link href="/">
-                                            <p className="text-sm font-light text-center mt-4 text-gray-800">
-                                                <span className="font-medium text-blue-500 hover:underline">
-                                                    Back to Login
-                                                </span>
-                                            </p>
-                                        </Link>
+                                        <Button
+                                            onClick={() => router.push("/login")}
+                                            className="w-full h-[36px] bg-[#03314B] hover:bg-[#011926] text-white text-sm"
+                                        >
+                                            Go to Login
+                                        </Button>
                                     </div>
                                 ) : statusFlag === "error" ? (
-                                    <div className="flex flex-col space-y-4 text-center">
+                                    <div className="flex flex-col space-y-4 ">
                                         <h2 className="text-lg font-bold text-red-600">Something went wrong</h2>
                                         <p className="font-semibold text-xs">
                                             Unable to reset password. Please try again.
                                         </p>
                                         <Link href="/">
-                                            <p className="text-sm font-light text-center mt-4 text-gray-800">
+                                            <p className="text-sm font-light  mt-4 text-gray-800">
                                                 <span className="font-medium text-blue-500 hover:underline">
                                                     Back to Login
                                                 </span>
@@ -275,7 +273,7 @@ export default function ResetPasswordPage() {
                                         </Button>
 
                                         <Link href="/login">
-                                            <p className="text-sm font-light text-center mt-4 text-gray-800">
+                                            <p className="text-sm font-light  mt-4 text-gray-800">
                                                 Remember your password?{" "}
                                                 <span className="font-medium text-blue-500 hover:underline">
                                                     Sign in

@@ -176,48 +176,47 @@ export const forgotPassword = async (req, res) => {
 // @access  Public
 export const resetPassword = async (req, res) => {
   try {
-   
-    const { token, newPassword } = req.body
+    const { token, password } = req.body
 
-    if (!token) {
-      return res.status(400).json({ message: "Missing token" })
+    if (!token || !password) {
+      return res.status(400).json({ status: "invalid", message: "Missing token or password" })
     }
 
-    if (!newPassword) {
-      return res.status(400).json({ message: "Password is required" })
-    }
-
-    const hashedToken = crypto.createHash("sha256").update(token).digest("hex")
-
-    const user = await User.findOne({
-      resetPasswordToken: hashedToken,
-      resetPasswordExpires: { $gt: Date.now() },
-    })
-
+    const user = await User.findOne({ resetPasswordToken: token })
     if (!user) {
-      return res.status(400).json({ message: "Invalid or expired token" })
+      return res.status(404).json({ status: "not_found", message: "Invalid or used token" })
     }
 
-    const result = validatePassword(newPassword, user.email)
+    if (!user.resetPasswordExpires || user.resetPasswordExpires < new Date()) {
+      return res.status(400).json({ status: "expired", message: "Token expired" })
+    }
+
+    if (user.isVerified === false) {
+      return res.status(400).json({ status: "unverified", message: "Email not verified" })
+    }
+
+    const result = validatePassword(password, user.email)
     if (!result.success) {
-      return res.status(400).json({ message: result.message })
+      return res.status(400).json({ status: "invalid", message: result.message })
     }
 
-    user.password = newPassword
+    // Assign langsung, biar di-hash oleh pre-save hook
+    user.password = password
     user.resetPasswordToken = null
     user.resetPasswordExpires = null
 
     await user.save()
 
     return res.status(200).json({
-      success: true,
+      status: "success",
       message: "Password has been reset successfully",
     })
   } catch (err) {
     console.error("❌ Reset Password Error:", err.message)
-    return res.status(500).json({ message: "Server error" })
+    return res.status(500).json({ status: "error", message: "Server error" })
   }
 }
+
 
 
 // @desc    Resend verification email by email

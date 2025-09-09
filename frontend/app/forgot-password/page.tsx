@@ -100,16 +100,18 @@ export default function ForgotPasswordPage() {
                                     alt="Joovlink Logo"
                                     className="h-10 auto "
                                 />
+                                    <div className="flex w-full justify-center">
+</div>
 
                                 {loading ? (
-                                    <div className="flex flex-col items-center space-y-4 text-center">
+                                    <div className="flex flex-col items-center space-y-4 ">
                                         <div className="animate-spin rounded-full border-4 border-gray-300 border-t-blue-500 h-8 w-8" />
                                         <p className="text-sm font-semibold">
                                             Sending reset link...
                                         </p>
                                     </div>
                                 ) : statusFlag === "success" ? (
-                                    <div className="flex flex-col space-y-4 text-center">
+                                    <div className="flex flex-col space-y-4 ">
                                         <h2 className="text-lg font-bold text-green-600">
                                             Success!
                                         </h2>
@@ -119,7 +121,7 @@ export default function ForgotPasswordPage() {
                                             or junk folder. The link will expire in 2 hours.
                                         </p>
                                         <Link href="/">
-                                            <p className="text-sm font-light text-center mt-4 text-gray-800">
+                                            <p className="text-sm font-light  mt-4 text-gray-800">
                                                 <span className="font-medium text-blue-500 hover:underline">
                                                     Back to Login
                                                 </span>
@@ -127,7 +129,7 @@ export default function ForgotPasswordPage() {
                                         </Link>
                                     </div>
                                 ) : statusFlag === "too_soon" ? (
-                                    <div className="flex flex-col space-y-4 text-center">
+                                    <div className="flex flex-col space-y-4 ">
                                         <h2 className="text-lg font-bold text-yellow-600">
                                             Too Soon
                                         </h2>
@@ -142,7 +144,7 @@ export default function ForgotPasswordPage() {
                                             Try Again
                                         </Button>
                                         <Link href="/">
-                                            <p className="text-sm font-light text-center mt-4 text-gray-800">
+                                            <p className="text-sm font-light  mt-4 text-gray-800">
                                                 <span className="font-medium text-blue-500 hover:underline">
                                                     Back to Login
                                                 </span>
@@ -150,7 +152,7 @@ export default function ForgotPasswordPage() {
                                         </Link>
                                     </div>
                                 ) : statusFlag === "not_found" ? (
-                                    <div className="flex flex-col space-y-4 text-center">
+                                    <div className="flex flex-col space-y-4 ">
                                         <h2 className="text-lg font-bold text-red-600">
                                             Email not found
                                         </h2>
@@ -164,7 +166,7 @@ export default function ForgotPasswordPage() {
                                             Try Again
                                         </Button>
                                         <Link href="/">
-                                            <p className="text-sm font-light text-center mt-4 text-gray-800">
+                                            <p className="text-sm font-light  mt-4 text-gray-800">
                                                 <span className="font-medium text-blue-500 hover:underline">
                                                     Back to Login
                                                 </span>
@@ -172,7 +174,7 @@ export default function ForgotPasswordPage() {
                                         </Link>
                                     </div>
                                 ) : statusFlag === "error" ? (
-                                    <div className="flex flex-col space-y-4 text-center">
+                                    <div className="flex flex-col space-y-4 ">
                                         <h2 className="text-lg font-bold text-red-600">
                                             Something went wrong
                                         </h2>
@@ -187,7 +189,7 @@ export default function ForgotPasswordPage() {
                                             Try Again
                                         </Button>
                                         <Link href="/">
-                                            <p className="text-sm font-light text-center mt-4 text-gray-800">
+                                            <p className="text-sm font-light  mt-4 text-gray-800">
                                                 <span className="font-medium text-blue-500 hover:underline">
                                                     Back to Login
                                                 </span>
@@ -233,7 +235,7 @@ export default function ForgotPasswordPage() {
                                         </Button>
 
                                         <Link href="/login">
-                                            <p className="text-sm font-light text-center mt-4 text-gray-800">
+                                            <p className="text-sm font-light  mt-4 text-gray-800">
                                                 Already have an account?{" "}
                                                 <span className="font-medium text-blue-500 hover:underline">
                                                     Sign in

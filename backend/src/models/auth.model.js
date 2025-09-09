@@ -90,7 +90,7 @@ userSchema.methods.generateVerifyToken = function () {
 userSchema.methods.generateResetPasswordToken = function () {
   const token = crypto.randomBytes(32).toString("hex")
   this.resetPasswordToken = token
-  this.resetPasswordExpires = new Date(Date.now() + 30 * 60 * 1000) // 30 menit
+  this.resetPasswordExpires = new Date(Date.now() + 120 * 60 * 1000) // 120 menit
   return token
 }
 
