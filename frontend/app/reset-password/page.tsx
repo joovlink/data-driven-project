@@ -100,7 +100,7 @@ export default function ResetPasswordPage() {
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
                         className="relative min-h-screen bg-cover bg-center flex items-center justify-center"
-                        style={{ backgroundImage: 'url("/images/background.jpg")' }}
+                        style={{ backgroundImage: 'url("/images/bahaya.png")' }}
                     >
                         <div className="flex flex-col items-center justify-center min-h-screen space-y-6 py-10">
                             <div className="min-h-[18vh] w-[380px] space-y-4 rounded-2xl bg-white mt-2 px-10 py-6 shadow-lg">

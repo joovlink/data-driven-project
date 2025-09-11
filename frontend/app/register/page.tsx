@@ -124,22 +124,31 @@ export default function RegisterPage() {
       <AnimatePresence mode="wait">
         <motion.div
           key={pathname}
-          initial={{ opacity: 0, scale: 1.02, x: 10 }}
+          initial={{ opacity: 0, x: 80, scale: 1.02 }}
           animate={{
             opacity: 1,
-            scale: 1,
             x: 0,
-            transition: { duration: 0.5, ease: "easeOut" },
+            scale: 1,
+            transition: {
+              duration: 1,
+              ease: [0.16, 1, 0.3, 1], // mirip easeOutExpo
+            },
           }}
           exit={{
             opacity: 0,
+            x: -80,
             scale: 1.01,
-            x: -10,
-            transition: { duration: 0.35, ease: "easeIn" },
+            transition: {
+              duration: 0.6,
+              ease: [0.7, 0, 0.84, 0], // fast exit
+            },
           }}
           className="absolute inset-0 left-[25%] h-full bg-cover bg-center"
           style={{ backgroundImage: 'url("/images/register.jpg")' }}
-        />
+        >
+          
+          {/* <div className="absolute inset-0 bg-gradient-to-tr from-[#03314B]/60 via-[#0071BB]/30 to-transparent" /> */}
+        </motion.div>
       </AnimatePresence>
 
       {/* Panel kiri */}
