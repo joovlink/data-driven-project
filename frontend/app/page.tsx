@@ -22,7 +22,7 @@ export default function HomePage() {
                     <SplashScreen key="splash" />
                 ) : (
                     <div key="landing" className="flex flex-col">
-                        <HomeHeroSection />
+                        <HomeHeroSection dummyUser={{ username: "anggaratriputra" }} />
                         <ASSAHeroSection />
                     </div>
                 )}

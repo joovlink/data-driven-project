@@ -63,23 +63,25 @@ input:-webkit-autofill:active {
 /* globals.css */
 
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
+/* JALUR scroll → kasih warna krem (D7C1AC) */
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #D7C1AC;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: #24293E;
   border-radius: 9999px;
-  border: 2px solid transparent;
+ 
   background-clip: content-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: #3b466f;
 }
 
 .custom-scroll {

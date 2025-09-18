@@ -6,6 +6,7 @@ import linedraw from "@/public/images/linedraw.png"
 import landingpage from "@/public/images/landing.jpg"
 
 import { motion, type Variants } from "framer-motion"
+import { AccountDropdown } from "./AccountDropdown"
 
 const container: Variants = {
     hidden: {},
@@ -39,7 +40,12 @@ const slideDown: Variants = {
         },
     },
 }
-export default function HomeHeroSection() {
+
+export default function HomeHeroSection({
+    dummyUser,
+}: {
+    dummyUser: { username: string } | null
+}) {
     return (
         <div className="relative w-full h-[65vh] overflow-hidden">
             {/* Background */}
@@ -93,20 +99,24 @@ export default function HomeHeroSection() {
                 </div>
 
                 <nav className="flex items-center pt-2 gap-6 text-white">
-                    <Link href="/login" className="hover:text-teal-300 transition">
-                        Login
-                    </Link>
-
-                    <span className="text-white/60">|</span>
-
-                    <motion.a
-                        href="/register"
-                        className="px-4 py-2 bg-[#6155F5] text-white font-semibold rounded-sm"
-                        whileHover={{ y: -2, scale: 1.02 }}
-                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                    >
-                        Sign up
-                    </motion.a>
+                    {dummyUser ? (
+                        <AccountDropdown username={dummyUser.username} variant="dark" />
+                    ) : (
+                        <>
+                            <Link href="/login" className="hover:text-teal-300 transition">
+                                Login
+                            </Link>
+                            <span className="text-white/60">|</span>
+                            <motion.a
+                                href="/register"
+                                className="px-4 py-2 bg-[#6155F5] text-white font-semibold rounded-sm"
+                                whileHover={{ y: -2, scale: 1.02 }}
+                                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                            >
+                                Sign up
+                            </motion.a>
+                        </>
+                    )}
                 </nav>
             </motion.header>
 
