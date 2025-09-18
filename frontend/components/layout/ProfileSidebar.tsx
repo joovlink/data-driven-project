@@ -72,7 +72,7 @@ export function ProfileSidebar() {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{
-                    duration: 0.2,
+                    duration: 0.4,
                     ease: "easeOut",
                 }}
             >
@@ -98,7 +98,7 @@ export function ProfileSidebar() {
                             </Link>
 
                             {item.children && isParentActive && (
-                                <div className="ml-8 mt-1 flex flex-col gap-1">
+                                <div className="ml-4 mt-1 flex flex-col gap-1">
                                     {item.children.map((child) => {
                                         const ChildIcon = child.icon
                                         const isChildActive = pathname === child.href

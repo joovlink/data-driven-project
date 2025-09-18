@@ -7,6 +7,7 @@ import Link from "next/link"
 export default function CvPage() {
     return (
         <div className="rounded-2xl bg-white shadow-sm px-8 py-6 relative overflow-hidden">
+            
             {/* Header */}
             <div className="flex items-center justify-between border-b pb-2">
                 <div className="flex space-x-2 items-center">
@@ -17,7 +18,7 @@ export default function CvPage() {
             </div>
 
             {/* Deskripsi */}
-            <p className="mt-4 text-sm text-neutral-600">
+            <p className="mt-4 text-sm text-black">
                 <strong>Why we need your CV?</strong>
                 <br />
                 Your CV is the key to showcasing your skills and experience. In our
