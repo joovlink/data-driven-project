@@ -145,7 +145,7 @@ export default function VerifyPage() {
                                     <p className="text-sm text-gray-600">You can now sign in with your account.</p>
                                     <div className="pt-2">
                                         <Link href="/login">
-                                            <Button className="w-full bg-[#03314B] hover:bg-[#011926]">
+                                            <Button className="w-full bg-[#17255A] hover:bg-[#011926]">
                                                 <LogIn className="h-4 w-4 mr-2" />
                                                 Go to Login
                                             </Button>
@@ -190,7 +190,7 @@ export default function VerifyPage() {
 
                                     <div className="pt-2">
                                         <Link href="/login">
-                                            <Button className="w-full bg-[#03314B] hover:bg-[#011926]">
+                                            <Button className="w-full bg-[#17255A] hover:bg-[#011926]">
                                                 <LogIn className="h-4 w-4 mr-2" />
                                                 Back to Login
                                             </Button>

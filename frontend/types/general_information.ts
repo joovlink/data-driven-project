@@ -6,7 +6,7 @@ export interface GeneralInformation {
     phone_number: string | null
     birth_date: string | null
     country: string | null
-    province: string | null
-    city: string | null
+    province_id: string | null
+    city_id: string | null
     short_description: string | null
 }

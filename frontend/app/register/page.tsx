@@ -147,7 +147,7 @@ export default function RegisterPage() {
           style={{ backgroundImage: 'url("/images/register.jpg")' }}
         >
           
-          {/* <div className="absolute inset-0 bg-gradient-to-tr from-[#03314B]/60 via-[#0071BB]/30 to-transparent" /> */}
+          {/* <div className="absolute inset-0 bg-gradient-to-tr from-[#17255A]/60 via-[#0071BB]/30 to-transparent" /> */}
         </motion.div>
       </AnimatePresence>
 
@@ -194,7 +194,7 @@ export default function RegisterPage() {
                 type="button"
                 onClick={handleResend}
                 disabled={isCoolingDown}
-                className="h-[36px] w-full bg-[#03314B] hover:bg-[#011926] rounded-md text-sm flex items-center justify-center gap-2 transition disabled:opacity-60"
+                className="h-[36px] w-full bg-[#17255A] hover:bg-[#011926] rounded-md text-sm flex items-center justify-center gap-2 transition disabled:opacity-60"
               >
                 <RefreshCcw className="h-4 w-4" />
                 {isCoolingDown
@@ -312,7 +312,7 @@ export default function RegisterPage() {
             <Button
               type="submit"
               disabled={submitting}
-              className="h-[36px] w-full bg-[#03314B] hover:bg-[#011926] rounded-md text-sm flex items-center justify-center gap-2 transition"
+              className="h-[36px] w-full bg-[#17255A] hover:bg-[#011926] rounded-md text-sm flex items-center justify-center gap-2 transition"
             >
               {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
               {submitting ? "Signing up..." : "Sign up"}

@@ -123,7 +123,7 @@ export default function ResetPasswordPage() {
                                         </p>
                                         <Button
                                             onClick={() => router.push("/login")}
-                                            className="w-full h-[36px] bg-[#03314B] hover:bg-[#011926] text-white text-sm"
+                                            className="w-full h-[36px] bg-[#17255A] hover:bg-[#011926] text-white text-sm"
                                         >
                                             Go to Login
                                         </Button>
@@ -149,7 +149,7 @@ export default function ResetPasswordPage() {
                                         </p>
                                         <Button
                                             onClick={() => router.push("/login")}
-                                            className="w-full h-[36px] bg-[#03314B] hover:bg-[#011926] text-white text-sm"
+                                            className="w-full h-[36px] bg-[#17255A] hover:bg-[#011926] text-white text-sm"
                                         >
                                             Go to Login
                                         </Button>
@@ -162,7 +162,7 @@ export default function ResetPasswordPage() {
                                         </p>
                                         <Button
                                             onClick={() => router.push("/login")}
-                                            className="w-full h-[36px] bg-[#03314B] hover:bg-[#011926] text-white text-sm"
+                                            className="w-full h-[36px] bg-[#17255A] hover:bg-[#011926] text-white text-sm"
                                         >
                                             Go to Login
                                         </Button>
@@ -175,7 +175,7 @@ export default function ResetPasswordPage() {
                                         </p>
                                         <Button
                                             onClick={() => router.push("/login")}
-                                            className="w-full h-[36px] bg-[#03314B] hover:bg-[#011926] text-white text-sm"
+                                            className="w-full h-[36px] bg-[#17255A] hover:bg-[#011926] text-white text-sm"
                                         >
                                             Go to Login
                                         </Button>
@@ -267,7 +267,7 @@ export default function ResetPasswordPage() {
                                         <Button
                                             type="submit"
                                             disabled={isSubmitting}
-                                            className="h-[36px] w-full bg-[#03314B] hover:bg-[#011926] rounded-md text-sm"
+                                            className="h-[36px] w-full bg-[#17255A] hover:bg-[#011926] rounded-md text-sm"
                                         >
                                             {isSubmitting ? "Resetting..." : "Reset Password"}
                                         </Button>

@@ -30,7 +30,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
             <AppNavbar dummyUser={{ username: "anggaratriputra" }} />
 
             {/* Sidebar + Content */}
-            <div className="w-full flex space-x-6 pt-8 px-28">
+            <div className="w-full flex space-x-6 py-8 px-28">
                 <ProfileSidebar />
 
 

@@ -156,7 +156,7 @@ export default function LoginPage() {
           <Button
             type="submit"
             disabled={loading}
-            className="h-[36px] w-full bg-[#03314B] hover:bg-[#011926] rounded-md text-sm flex items-center justify-center gap-2 transition"
+            className="h-[36px] w-full bg-[#17255A] hover:bg-[#011926] rounded-md text-sm flex items-center justify-center gap-2 transition"
           >
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
             {loading ? "Logging in..." : "Login"}

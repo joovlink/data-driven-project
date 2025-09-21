@@ -89,7 +89,7 @@ export default function ForgotPasswordPage() {
                     style={{ backgroundImage: 'url("/images/forgotpassword.jpg")' }}
                 >
                    
-                    {/* <div className="absolute inset-0 bg-gradient-to-tr from-[#03314B]/60 via-[#0071BB]/30 to-transparent" /> */}
+                    {/* <div className="absolute inset-0 bg-gradient-to-tr from-[#17255A]/60 via-[#0071BB]/30 to-transparent" /> */}
                 </motion.div>
             </AnimatePresence>
 
@@ -119,7 +119,7 @@ export default function ForgotPasswordPage() {
                         </p>
                         <Button
                             onClick={() => router.push("/login")}
-                            className="w-full bg-[#03314B] hover:bg-[#011926] text-white text-sm"
+                            className="w-full bg-[#17255A] hover:bg-[#011926] text-white text-sm"
                         >
                             Go to Login
                         </Button>
@@ -132,7 +132,7 @@ export default function ForgotPasswordPage() {
                         </p>
                         <Button
                             onClick={() => setStatusFlag("idle")}
-                            className="w-full bg-[#03314B] hover:bg-[#011926] text-white text-sm"
+                            className="w-full bg-[#17255A] hover:bg-[#011926] text-white text-sm"
                         >
                             Try Again
                         </Button>
@@ -145,7 +145,7 @@ export default function ForgotPasswordPage() {
                         </p>
                         <Button
                             onClick={() => setStatusFlag("idle")}
-                            className="w-full bg-[#03314B] hover:bg-[#011926] text-white text-sm"
+                            className="w-full bg-[#17255A] hover:bg-[#011926] text-white text-sm"
                         >
                             Try Again
                         </Button>
@@ -158,7 +158,7 @@ export default function ForgotPasswordPage() {
                         </p>
                         <Button
                             onClick={() => setStatusFlag("idle")}
-                            className="w-full bg-[#03314B] hover:bg-[#011926] text-white text-sm"
+                            className="w-full bg-[#17255A] hover:bg-[#011926] text-white text-sm"
                         >
                             Try Again
                         </Button>
@@ -185,7 +185,7 @@ export default function ForgotPasswordPage() {
                         <Button
                             type="submit"
                             disabled={isSubmitting || loading}
-                            className="h-[36px] w-full bg-[#03314B] hover:bg-[#011926] rounded-md text-sm flex items-center justify-center gap-2 transition"
+                            className="h-[36px] w-full bg-[#17255A] hover:bg-[#011926] rounded-md text-sm flex items-center justify-center gap-2 transition"
                         >
                             {loading ? "Sending..." : "Send Reset Link"}
                         </Button>

@@ -44,7 +44,7 @@ export default function AppNavbar({
                     />
                 </Link>
 
-                <nav className="hidden md:flex items-center pt-2 gap-2 text-[#03314B] font-semibold text-md">
+                <nav className="hidden md:flex items-center pt-2 gap-2 text-[#17255A] font-semibold text-md">
                     <span className="opacity-50">▸</span>
                     <Link href="/career" className="hover:text-[#021927] transition">
                         Career
@@ -67,7 +67,7 @@ export default function AppNavbar({
                         <span className="text-white/60">|</span>
                         <motion.a
                             href="/register"
-                            className="px-4 py-2 bg-[#6155F5] text-white font-semibold rounded-sm"
+                            className="px-4 py-2 bg-[#17255A] text-white font-semibold rounded-sm"
                             whileHover={{ y: -2, scale: 1.02 }}
                             transition={{ type: "spring", stiffness: 300, damping: 20 }}
                         >

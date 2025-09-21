@@ -9,10 +9,10 @@ export default function CvPage() {
             {/* Header */}
             <div className="flex items-center justify-between border-b pb-2">
                 <div className="flex space-x-2 items-center">
-                    <User className="w-5 h-5" />
+                    <User className="w-6 h-6" />
                     <h2 className="text-lg font-semibold">General Information</h2>
                 </div>
-                <Edit className="w-5 h-5" />
+                <Edit className="w-6 h-6" />
             </div>
         </div>
     )

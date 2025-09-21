@@ -51,6 +51,26 @@ input:-webkit-autofill:active {
 
 }
 
+/* Hilangin icon bawaan date input */
+
+@layer base {
+  /* Chrome, Edge, Safari */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0;            /* bikin transparan */
+    cursor: pointer;       /* tetap bisa diklik */
+    position: absolute;    /* jaga posisi */
+    right: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Firefox */
+  input[type="date"]::-moz-calendar-picker-indicator {
+    opacity: 0;
+    cursor: pointer;
+  }
+}
+
 /* Brutal force override buat popper Radix yang inject ke body */
 
 
@@ -74,7 +94,7 @@ input:-webkit-autofill:active {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #24293E;
+  background-color: #17255A;
   border-radius: 9999px;
  
   background-clip: content-box;
@@ -183,4 +203,3 @@ input:-webkit-autofill:active {
     @apply bg-background text-foreground;
   }
 }
-

@@ -29,7 +29,7 @@ export default function SplashScreen() {
                 {/* Loading bar */}
                 <div className="w-48 h-1.5 bg-white/10 rounded-full overflow-hidden">
                     <motion.div
-                        className="h-full bg-gradient-to-r from-[#0a1f44] via-[#14b8a6] to-[#0a1f44]"
+                        className="h-full bg-gradient-to-r from-[##17255A] via-[#14b8a6] to-[#17255A]"
                         initial={{ x: "-100%" }}
                         animate={{ x: "100%" }}
                         transition={{

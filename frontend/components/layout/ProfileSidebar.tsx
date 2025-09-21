@@ -89,7 +89,7 @@ export function ProfileSidebar() {
                                 className={cn(
                                     "flex items-center gap-3 px-5 py-1 rounded-3xl text-sm font-medium transition-colors duration-150 ease-out",
                                     isParentActive
-                                        ? "bg-[#24293E] text-white font-bold"
+                                        ? "bg-[#17255A] text-white font-bold"
                                         : "text-neutral-700 hover:bg-neutral-100"
                                 )}
                             >
@@ -111,7 +111,7 @@ export function ProfileSidebar() {
                                                 className={cn(
                                                     "flex items-center gap-3 px-5 py-1 rounded-3xl text-sm font-medium transition-colors duration-150 ease-out",
                                                     isChildActive
-                                                        ? "bg-[#24293E] text-white font-bold"
+                                                        ? "bg-[#17255A] text-white font-bold"
                                                         : "text-neutral-700 hover:bg-neutral-100"
                                                 )}
                                             >
