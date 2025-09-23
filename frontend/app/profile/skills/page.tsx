@@ -222,7 +222,7 @@ export default function SkillsPage() {
                         className="p-1 rounded-md hover:bg-gray-100"
                         onClick={() => console.log("Edit", c.name)}
                       >
-                        <Edit className="w-4 h-4 text-gray-500" />
+                        <Edit className="w-4 h-4" />
                       </button>
                     </div>
                     <div className="flex flex-col">

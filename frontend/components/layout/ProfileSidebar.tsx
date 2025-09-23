@@ -66,9 +66,9 @@ export function ProfileSidebar() {
     }, [pathname])
 
     return (
-        <aside className="w-[260px] shrink-0">
+        <aside className="w-[270px] shrink-0">
             <motion.nav
-                className="flex flex-col gap-1 max-h-40 overflow-y-auto pr-4 scroll-smooth"
+                className="flex flex-col gap-1 max-h-40 overflow-y-auto pr-3 scroll-smooth"
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{

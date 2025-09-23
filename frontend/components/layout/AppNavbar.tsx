@@ -26,7 +26,7 @@ export default function AppNavbar({
 }) {
     return (
         <motion.header
-            className="relative w-full flex items-center justify-between px-14 py-5 z-20 shadow-sm bg-white"
+            className="sticky top-0 w-full flex items-center justify-between px-14 py-5 z-20 shadow-sm bg-white"
             variants={slideDown}
             initial="hidden"
             animate="show"
