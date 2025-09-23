@@ -90,7 +90,7 @@ export function ProfileSidebar() {
                                     "flex items-center gap-3 px-5 py-1 rounded-3xl text-sm font-medium transition-colors duration-150 ease-out",
                                     isParentActive
                                         ? "bg-[#17255A] text-white font-bold"
-                                        : "text-neutral-700 hover:bg-neutral-100"
+                                        : "text-neutral-700 hover:bg-[#17255A] hover:text-white hover:font-bold"
                                 )}
                             >
                                 <Icon className="h-4 w-4 shrink-0" />

@@ -21,6 +21,7 @@ type ProfileData = {
 
 function ProfileHeader() {
     const [profile, setProfile] = useState<ProfileData | null>(null)
+    const [hasAnimated, setHasAnimated] = useState(false)
 
     useEffect(() => {
         const dummy: ProfileData = {
@@ -39,8 +40,17 @@ function ProfileHeader() {
     if (!profile) return null
 
     return (
-        <div className="relative w-full rounded-2xl shadow-md overflow-hidden px-10 py-8 text-white 
-                bg-[linear-gradient(to_right,rgba(255,255,255,0.35),rgba(23,37,90,0.75))]">
+        <motion.div
+            initial={!hasAnimated ? { opacity: 0, y: -60 } : false}
+            animate={!hasAnimated ? { opacity: 1, y: 0 } : {}}
+            transition={{
+                duration: 0.9,
+                ease: [0.22, 1, 0.36, 1] // mirip easing iOS spring
+            }}
+            onAnimationComplete={() => setHasAnimated(true)}
+            className="relative w-full rounded-2xl shadow-md overflow-hidden px-10 py-8 text-white 
+    bg-[linear-gradient(to_right,rgba(255,255,255,0.35),rgba(23,37,90,0.75))]"
+        >
             {/* Background image layer */}
             <div className="absolute inset-0 bg-[url('/images/bannerabstract.png')] bg-cover bg-center opacity-10" />
 
@@ -103,7 +113,7 @@ function ProfileHeader() {
                     </div>
                 </div>
             </div>
-        </div>
+        </motion.div>
     )
 }
 
