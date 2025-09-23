@@ -84,6 +84,7 @@ export function ProfileSidebar() {
                     return (
                         <div key={item.label} className="flex flex-col">
                             <Link
+                                scroll={true}
                                 ref={pathname === item.href ? activeRef : null}
                                 href={item.href}
                                 className={cn(

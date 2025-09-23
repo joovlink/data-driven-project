@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import { motion } from "framer-motion"
 import SplashScreen from "@/components/SplashScreen"
 import AppNavbar from "@/components/layout/AppNavbar"
@@ -45,16 +45,16 @@ function ProfileHeader() {
             animate={!hasAnimated ? { opacity: 1, y: 0 } : {}}
             transition={{
                 duration: 0.9,
-                ease: [0.22, 1, 0.36, 1] // mirip easing iOS spring
+                ease: [0.22, 1, 0.36, 1],
             }}
             onAnimationComplete={() => setHasAnimated(true)}
             className="relative w-full rounded-2xl shadow-md overflow-hidden px-10 py-8 text-white 
-    bg-[linear-gradient(to_right,rgba(255,255,255,0.35),rgba(23,37,90,0.75))]"
+            bg-[linear-gradient(to_right,rgba(255,255,255,0.35),rgba(23,37,90,0.75))]"
         >
             {/* Background image layer */}
             <div className="absolute inset-0 bg-[url('/images/bannerabstract.png')] bg-cover bg-center opacity-10" />
 
-            {/* Content (di atas gradient + image) */}
+            {/* Content */}
             <div className="relative flex items-center gap-6">
                 {/* Foto */}
                 <div className="w-32 aspect-[3/4] rounded-md overflow-hidden border border-white/20">
@@ -84,27 +84,28 @@ function ProfileHeader() {
                             <span>{profile.phone}</span>
                         </div>
                     </div>
-
-
                 </div>
+
                 <div>
                     {/* Tombol CV */}
                     <a
                         href={profile.cvFile}
                         target="_blank"
-                        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold bg-[#FFFFFF]/80  text-[#17255A] hover:bg-[#17255A] hover:text-white rounded-lg transition"
+                        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold bg-[#FFFFFF]/80 text-[#17255A] hover:bg-[#17255A] hover:text-white rounded-lg transition"
                     >
                         <FileUser className="w-4 h-4" />
-                        {/* <span>{profile.cvFile.split("/").pop()}</span> */}
                         <span>CV_TaufiqAhmadi_August_2025.pdf</span>
                     </a>
+
+                    {/* Skills */}
                     <div className="flex gap-2 mt-3 flex-wrap text-[#17255A]">
                         {profile.skills.map((skill) => (
                             <span
                                 key={skill}
                                 className="px-3 py-1 rounded-full text-xs font-semibold"
                                 style={{
-                                    background: "linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.8))",
+                                    background:
+                                        "linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.8))",
                                 }}
                             >
                                 {skill}
@@ -117,15 +118,30 @@ function ProfileHeader() {
     )
 }
 
-
 export default function ProfileLayout({ children }: { children: React.ReactNode }) {
     const [firstVisit, setFirstVisit] = useState(true)
     const pathname = usePathname()
+    const prevPath = useRef<string | null>(null)
 
     useEffect(() => {
         const timer = setTimeout(() => setFirstVisit(false), 2000)
         return () => clearTimeout(timer)
     }, [])
+
+    const mainRef = useRef<HTMLDivElement>(null)
+
+    useLayoutEffect(() => {
+        if (firstVisit) return
+        if (prevPath.current !== pathname) {
+            prevPath.current = pathname
+            // Reset scroll di semua target
+            requestAnimationFrame(() => {
+                window.scrollTo(0, 0)
+                document.documentElement.scrollTop = 0
+                document.body.scrollTop = 0
+            })
+        }
+    }, [pathname, firstVisit])
 
     if (firstVisit) {
         return (
@@ -147,7 +163,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
 
             {/* Body */}
             <div className="grid grid-cols-[16rem_1fr] gap-8 px-28 py-8">
-                {/* Sidebar sticky di bawah navbar */}
+                {/* Sidebar sticky */}
                 <aside className="sticky top-[100px] self-start">
                     <ProfileSidebar />
                 </aside>
