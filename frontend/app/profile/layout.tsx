@@ -31,7 +31,7 @@ function ProfileHeader() {
             email: "taufiq.ahmadi@gmail.com",
             phone: "+6281280810302",
             skills: ["NextJS", "TypeScript", "Go", "MongoDB"],
-            cvFile: "/CV_TaufiqAhmadi_August_2025.pdf",
+            cvFile: "https://media.tenor.com/gNgtEpVk_fUAAAAM/prabowo-wowo.gif",
             photo: "/images/profile_dummy2.png",
         }
         setProfile(dummy)
