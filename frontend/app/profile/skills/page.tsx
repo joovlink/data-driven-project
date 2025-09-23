@@ -123,7 +123,8 @@ export default function SkillsPage() {
   return (
     <div className="flex flex-col space-y-6">
       {/* Skills & Languages */}
-      <div className="relative rounded-2xl shadow-md overflow-hidden bg-white">
+      <div className="relative rounded-2xl shadow-md overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/images/bg_pattern.png')] bg-cover bg-center opacity-70" />
         <div className="relative px-8 py-6">
           {/* Header */}
           <div className="flex items-center justify-between border-b pb-2">
@@ -181,6 +182,7 @@ export default function SkillsPage() {
                 </div>
               </div>
             </div>
+
           ) : (
             <p className="text-gray-400 text-sm mt-6">Loading...</p>
           )}
@@ -188,7 +190,8 @@ export default function SkillsPage() {
       </div>
 
       {/* Certifications */}
-      <div className="relative rounded-2xl shadow-md overflow-hidden bg-white">
+      <div className="relative rounded-2xl shadow-md overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/images/bg_pattern.png')] bg-cover bg-center opacity-70" />
         <div className="relative px-8 py-6">
           {/* Header */}
           <div className="flex items-center justify-between border-b pb-2">

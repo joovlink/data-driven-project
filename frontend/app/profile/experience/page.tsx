@@ -127,7 +127,7 @@ export default function ProfileTimeline() {
         setExpanded(false)
         if (expCardRef.current) {
             const offsetTop =
-                expCardRef.current.getBoundingClientRect().top + window.scrollY - 100 
+                expCardRef.current.getBoundingClientRect().top + window.scrollY - 100
             window.scrollTo({ top: offsetTop, behavior: "smooth" })
         }
     }
@@ -135,60 +135,70 @@ export default function ProfileTimeline() {
     return (
         <div className="space-y-6">
             {/* EXPERIENCE CARD */}
-            <div ref={expCardRef} className="rounded-2xl bg-white shadow-sm px-8 py-6 relative overflow-hidden">
-                <div className="flex items-center justify-between border-b pb-2">
-                    <div className="flex space-x-2 items-center">
-                        <Briefcase className="w-6 h-6" />
-                        <h2 className="text-lg font-semibold">Experience</h2>
-                    </div>
-                    <Plus className="w-6 h-6 cursor-pointer" />
-                </div>
-                <div className="py-4">
-                    <span>
-                        Add your work experiences to showcase your career journey and
-                        achievements.
-                    </span>
-                </div>
+            <div ref={expCardRef} className="relative rounded-2xl shadow-md overflow-hidden">
+                {/* Background image layer */}
+                <div className="absolute inset-0 bg-[url('/images/bg_pattern.png')] bg-cover bg-center opacity-70" />
 
-                <TimelineSection items={visibleExp} />
-
-                {experience.length > 2 && (
-                    <div className="mt-4">
-                        {!expanded ? (
-                            <button
-                                onClick={handleSeeMore}
-                                className="text-sm text-blue-600 hover:underline"
-                            >
-                                See More...
-                            </button>
-                        ) : (
-                            <button
-                                onClick={handleSeeLess}
-                                className="text-sm text-blue-600 hover:underline"
-                            >
-                                See Less
-                            </button>
-                        )}
+                {/* Content layer */}
+                <div className="relative px-8 py-6">
+                    <div className="flex items-center justify-between border-b pb-2">
+                        <div className="flex space-x-2 items-center">
+                            <Briefcase className="w-6 h-6" />
+                            <h2 className="text-lg font-semibold">Experience</h2>
+                        </div>
+                        <Plus className="w-6 h-6 cursor-pointer" />
                     </div>
-                )}
+
+                    <div className="py-4">
+                        <span>
+                            Add your work experiences to showcase your career journey and achievements.
+                        </span>
+                    </div>
+
+                    <TimelineSection items={visibleExp} />
+
+                    {experience.length > 2 && (
+                        <div className="mt-4">
+                            {!expanded ? (
+                                <button
+                                    onClick={handleSeeMore}
+                                    className="text-sm text-blue-600 hover:underline"
+                                >
+                                    See More...
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={handleSeeLess}
+                                    className="text-sm text-blue-600 hover:underline"
+                                >
+                                    See Less
+                                </button>
+                            )}
+                        </div>
+                    )}
+                </div>
             </div>
 
-            {/* EDUCATION CARD */}
-            <div className="rounded-2xl bg-white shadow-sm px-8 py-6 relative overflow-hidden">
-                <div className="flex items-center justify-between border-b pb-2">
-                    <div className="flex space-x-2 items-center">
-                        <GraduationCap className="w-6 h-6" />
-                        <h2 className="text-lg font-semibold">Education</h2>
-                    </div>
-                    <Plus className="w-6 h-6 cursor-pointer" />
-                </div>
-                <div className="py-4">
-                    <span>
-                        Add your academic background to complete your career story.
-                    </span>
-                </div>
 
-                <TimelineSection items={education} />
+            {/* EDUCATION CARD */}
+            <div className="relative rounded-2xl shadow-md overflow-hidden">
+                <div className="absolute inset-0 bg-[url('/images/bg_pattern.png')] bg-cover bg-center opacity-70" />
+                <div className="relative px-8 py-6">
+                    <div className="flex items-center justify-between border-b pb-2">
+                        <div className="flex space-x-2 items-center">
+                            <GraduationCap className="w-6 h-6" />
+                            <h2 className="text-lg font-semibold">Education</h2>
+                        </div>
+                        <Plus className="w-6 h-6 cursor-pointer" />
+                    </div>
+                    <div className="py-4">
+                        <span>
+                            Add your academic background to complete your career story.
+                        </span>
+                    </div>
+
+                    <TimelineSection items={education} />
+                </div>
             </div>
         </div>
     )

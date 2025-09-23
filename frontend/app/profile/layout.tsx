@@ -42,7 +42,7 @@ function ProfileHeader() {
         <div className="relative w-full rounded-2xl shadow-md overflow-hidden px-10 py-8 text-white 
                 bg-[linear-gradient(to_right,rgba(255,255,255,0.35),rgba(23,37,90,0.75))]">
             {/* Background image layer */}
-            <div className="absolute inset-0 bg-[url('/images/notfound.png')] bg-cover bg-center opacity-100" />
+            <div className="absolute inset-0 bg-[url('/images/bannerabstract.png')] bg-cover bg-center opacity-10" />
 
             {/* Content (di atas gradient + image) */}
             <div className="relative flex items-center gap-6">
@@ -57,10 +57,10 @@ function ProfileHeader() {
 
                 {/* Info */}
                 <div className="flex-1">
-                    <h2 className="text-2xl text-white font-bold">{profile.name}</h2>
-                    <p className="text-white ">{profile.title}</p>
+                    <h2 className="text-2xl text-[#17255A] font-bold">{profile.name}</h2>
+                    <p className="text-[#17255A] ">{profile.title}</p>
 
-                    <div className="mt-2 text-sm space-y-1 text-white ">
+                    <div className="mt-2 text-sm space-y-1 text-[#17255A] ">
                         <div className="flex items-center gap-2">
                             <MapPin className="w-4 h-4" />
                             <span>{profile.location}</span>
@@ -82,10 +82,11 @@ function ProfileHeader() {
                     <a
                         href={profile.cvFile}
                         target="_blank"
-                        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold bg-[#17255A]/70 text-white hover:bg-gray-700 rounded-lg transition"
+                        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold bg-[#FFFFFF]/80  text-[#17255A] hover:bg-[#17255A] hover:text-white rounded-lg transition"
                     >
                         <FileUser className="w-4 h-4" />
-                        <span>{profile.cvFile.split("/").pop()}</span>
+                        {/* <span>{profile.cvFile.split("/").pop()}</span> */}
+                        <span>CV_TaufiqAhmadi_August_2025.pdf</span>
                     </a>
                     <div className="flex gap-2 mt-3 flex-wrap text-[#17255A]">
                         {profile.skills.map((skill) => (
