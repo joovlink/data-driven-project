@@ -293,7 +293,7 @@ export default function EditEducationModal({
                         </Button>
                         <Button
                             type="submit"
-                            className="bg-green-700 hover:bg-green-600"
+                        className="bg-teal-800 hover:bg-teal-700"
                             disabled={loading}
                         >
                             {loading ? "Saving..." : "Save Changes"}

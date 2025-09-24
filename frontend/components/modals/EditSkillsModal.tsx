@@ -230,7 +230,7 @@ export default function EditSkillsModal({
                     <Button variant="outline" onClick={onClose}>
                         Cancel
                     </Button>
-                    <Button className="bg-green-700 hover:bg-green-600" onClick={saveChanges}>Save Changes</Button>
+                    <Button className="bg-teal-800 hover:bg-teal-700" onClick={saveChanges}>Save Changes</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

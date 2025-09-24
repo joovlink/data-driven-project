@@ -196,7 +196,7 @@ export default function ChangePasswordPage() {
                         </button>
                         <button
                             type="submit"
-                            className="px-4 py-2 bg-teal-800 hover:bg-teal-800 text-white rounded-md text-sm font-medium"
+                            className="px-4 py-2 bg-teal-800 hover:bg-teal-700 text-white rounded-md text-sm font-medium"
                         >
                             Save Changes
                         </button>

@@ -147,7 +147,7 @@ export default function EditCertificateModal({ open, onClose, certificate }: Pro
                         <Button type="button" variant="outline" onClick={onClose} disabled={loading}>
                             Cancel
                         </Button>
-                        <Button type="submit" className="bg-green-700 hover:bg-green-600" disabled={loading}>
+                        <Button type="submit" className="bg-teal-800 hover:bg-teal-700" disabled={loading}>
                             {loading ? "Saving..." : "Save Changes"}
                         </Button>
                     </DialogFooter>

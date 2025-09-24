@@ -24,6 +24,7 @@ import {
     SelectItem,
 } from "@/components/ui/select"
 import { FileUser, Upload } from "lucide-react"
+import { DialogDescription } from "@radix-ui/react-dialog"
 
 // ✅ Benerin schema: portfolioType wajib
 const formSchema = z.object({
@@ -103,21 +104,29 @@ export default function CvPortfolioModal({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-lg p-0">
+            <DialogContent className="max-w-2xl">
                 <div className="flex flex-col max-h-[85vh] overflow-hidden">
-                    {/* Header */}
-                    <DialogHeader className="px-6 pt-6 pb-3 border-b">
-                        <DialogTitle className="flex items-center gap-2 text-lg">
-                            <FileUser className="w-5 h-5" />
-                            CV & Portofolio
-                        </DialogTitle>
-                    </DialogHeader>
+                    {/* Header custom */}
+                    <div>
+                        <div className="flex items-center gap-2">
+                            <FileUser className="w-6 h-6" />
+                            <DialogTitle asChild>
+                                <h2 className="text-xl font-semibold">CV and Portofolio</h2>
+                            </DialogTitle>
+                        </div>
+
+                        <div className="border-b my-3" />
+
+                        <DialogDescription className="text-sm">
+                            Showcase your hard skills or soft skills and languages to highlight your strengths.
+                        </DialogDescription>
+                    </div>
 
                     {/* Form */}
                     <form
                         id="cv-portfolio-form"
                         onSubmit={handleSubmit(onSubmit)}
-                        className="flex flex-col px-6 py-4 space-y-2"
+                        className="flex flex-col px-0.5 py-4 space-y-2"
                     >
                         {/* CV */}
                         <div>
@@ -228,7 +237,7 @@ export default function CvPortfolioModal({
                     </form>
 
                     {/* Footer */}
-                    <DialogFooter className="px-6 py-3 border-t bg-white">
+                    <DialogFooter>
                         <div className="flex w-full justify-end gap-3">
                             <Button
                                 type="button"
@@ -241,7 +250,7 @@ export default function CvPortfolioModal({
                             <Button
                                 type="submit"
                                 form="cv-portfolio-form"
-                                className="bg-green-700 hover:bg-green-600"
+                                className="bg-teal-800 hover:bg-teal-700"
                                 disabled={isSubmitting}
                             >
                                 {isSubmitting ? "Saving..." : "Save Changes"}
