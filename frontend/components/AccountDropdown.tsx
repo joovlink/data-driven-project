@@ -76,14 +76,14 @@ export function AccountDropdown({ username, variant = "light" }: Props) {
                 </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-40 mr-3 bg-[#F7F7F7]" align="end">
-                <DropdownMenuItem asChild className="hover:bg-gray-200 cursor-pointer">
-                    <Link href="/profile" className="flex items-center gap-2">
+                <DropdownMenuItem asChild className="cursor-pointer" >
+                    <Link href="/profile" className="flex items-center gap-2 ">
                         <User className="h-4 w-4" />
                         My Profile
                     </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout} className="hover:bg-gray-200 cursor-pointer">
+                <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
                     <LogOut className="h-4 w-4" />
                     Log out
                 </DropdownMenuItem>
