@@ -26,6 +26,9 @@ type Skill = {
     level: "Beginner" | "Intermediate" | "Advanced" | "Native"
 }
 
+const skillLevels: Skill["level"][] = ["Beginner", "Intermediate", "Advanced"]
+const languageLevels: Skill["level"][] = ["Beginner", "Intermediate", "Advanced", "Native"]
+
 type Props = {
     open: boolean
     onClose: () => void
@@ -121,32 +124,23 @@ export default function EditSkillsModal({
                                 />
 
                                 {/* Select level */}
+                             
                                 <div className="relative w-40">
                                     <Select
                                         value={s.level}
                                         onValueChange={(val) => handleChange(skills, setSkills, idx, "level", val)}
                                     >
-                                        <SelectTrigger
-                                            className={`w-full border-[2px] ${levelColors[s.level]}`}
-                                        >
+                                        <SelectTrigger className={`w-full border-[2px] ${levelColors[s.level]}`}>
                                             <SelectValue placeholder="Choose level" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {levels.map((lv) => (
-                                                <SelectItem
-                                                    key={lv}
-                                                    value={lv}
-                                                    className="cursor-pointer"
-                                                >
+                                            {skillLevels.map((lv) => (
+                                                <SelectItem key={lv} value={lv} className="cursor-pointer">
                                                     {lv}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                    {/* <ChevronDown
-                                        className={`absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 
-                                            ${s.level === "Beginner" ? "text-white" : "text-black"}`}
-                                    /> */}
                                 </div>
 
                                 {/* Remove button */}
@@ -190,33 +184,23 @@ export default function EditSkillsModal({
                                     }
                                 />
 
-                                {/* Select level */}
+                                {/* Languages Select level */}
                                 <div className="relative w-40">
                                     <Select
                                         value={l.level}
-                                        onValueChange={(val) =>
-                                            handleChange(languages, setLanguages, idx, "level", val)
-                                        }
+                                        onValueChange={(val) => handleChange(languages, setLanguages, idx, "level", val)}
                                     >
                                         <SelectTrigger className={`w-full border-[2px] ${levelColors[l.level]}`}>
                                             <SelectValue placeholder="Choose level" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {levels.map((lv) => (
-                                                <SelectItem
-                                                    key={lv}
-                                                    value={lv}
-                                                    className="cursor-pointer"
-                                                >
+                                            {languageLevels.map((lv) => (
+                                                <SelectItem key={lv} value={lv} className="cursor-pointer">
                                                     {lv}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                    {/* <ChevronDown
-                                        className={`absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 
-                                            ${l.level === "Beginner" ? "text-black" : "text-white"}`}
-                                    /> */}
                                 </div>
 
                                 {/* Remove button */}
