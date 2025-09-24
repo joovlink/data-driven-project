@@ -2,6 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { Edit, Blocks, Award, Plus } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import EditSkillsModal from "@/components/modals/EditSkillsModal";
+import AddCertificateModal from "@/components/modals/AddCertificateModal";
+import EditCertificateModal from "@/components/modals/EditCertificateModal";
 
 type Skill = {
   name: string;
@@ -12,7 +16,9 @@ type Certification = {
   issuer: string;
   name: string;
   credential_id: string;
-  due: string;
+  url: string;
+  issue_date: string;
+  expired_date: string;
 };
 
 type SkillAndLanguage = {
@@ -23,87 +29,121 @@ type SkillAndLanguage = {
 
 export default function SkillsPage() {
   const [data, setData] = useState<SkillAndLanguage | null>(null);
-  const [open, setOpen] = useState(false);
+  const [openEditSkills, setOpenEditSkills] = useState(false)
+  const [openAddCert, setOpenAddCert] = useState(false)
+  const [openEditCert, setOpenEditCert] = useState(false)
+  const [selectedCert, setSelectedCert] = useState<Certification | null>(null)
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const dummy: SkillAndLanguage = {
-      skills: [
-        { name: "React Native", level: "Beginner" },
-        { name: "React JS", level: "Intermediate" },
-        { name: "Next JS", level: "Intermediate" },
-        { name: "Express JS", level: "Intermediate" },
-        { name: "Node JS", level: "Advanced" },
-        { name: "TypeScript", level: "Intermediate" },
-        { name: "JavaScript (ES6+)", level: "Advanced" },
-        { name: "Tailwind CSS", level: "Advanced" },
-        { name: "MongoDB", level: "Intermediate" },
-        { name: "PostgreSQL", level: "Beginner" },
-        { name: "Docker", level: "Beginner" },
-        { name: "Git / GitHub", level: "Advanced" },
-      ],
-      languages: [
-        { name: "Bahasa Indonesia", level: "Native" },
-        { name: "English", level: "Advanced" },
-      ],
-      certifications: [
-        {
-          issuer: "Cisco",
-          name: "Cisco Certified Network Professional Routing and Switching",
-          credential_id: "CSCO12981208",
-          due: "Oct 2028",
-        },
-        {
-          issuer: "AWS",
-          name: "AWS Certified Solutions Architect – Associate",
-          credential_id: "AWS123456789",
-          due: "Dec 2026",
-        },
-        {
-          issuer: "Google Cloud",
-          name: "Professional Cloud Architect",
-          credential_id: "GCP987654321",
-          due: "Jun 2027",
-        },
-        {
-          issuer: "Microsoft",
-          name: "Microsoft Certified: Azure Administrator Associate",
-          credential_id: "MSFT55667788",
-          due: "Mar 2026",
-        },
-        {
-          issuer: "CompTIA",
-          name: "CompTIA Security+",
-          credential_id: "COMPTIA12345",
-          due: "Sep 2025",
-        },
-        {
-          issuer: "Oracle",
-          name: "Oracle Certified Professional, Java SE 11 Developer",
-          credential_id: "ORCL11223344",
-          due: "Nov 2027",
-        },
-        {
-          issuer: "PMI",
-          name: "Project Management Professional (PMP)",
-          credential_id: "PMI44556677",
-          due: "Jul 2026",
-        },
-        {
-          issuer: "Scrum.org",
-          name: "Professional Scrum Master I (PSM I)",
-          credential_id: "SCRUM112244",
-          due: "May 2027",
-        },
-        {
-          issuer: "Linux Foundation",
-          name: "Certified Kubernetes Administrator (CKA)",
-          credential_id: "LFCKA778899",
-          due: "Feb 2028",
-        },
-      ],
-    };
-    setData(dummy);
+    setLoading(true);
+    const timer = setTimeout(() => {
+      const dummy: SkillAndLanguage = {
+        skills: [
+          { name: "React Native", level: "Beginner" },
+          { name: "React JS", level: "Intermediate" },
+          { name: "Next JS", level: "Intermediate" },
+          { name: "Express JS", level: "Intermediate" },
+          { name: "Node JS", level: "Advanced" },
+          { name: "TypeScript", level: "Intermediate" },
+          { name: "JavaScript (ES6+)", level: "Advanced" },
+          { name: "Tailwind CSS", level: "Advanced" },
+          { name: "MongoDB", level: "Intermediate" },
+          { name: "PostgreSQL", level: "Beginner" },
+          { name: "Docker", level: "Beginner" },
+          { name: "Git / GitHub", level: "Advanced" },
+        ],
+        languages: [
+          { name: "Bahasa Indonesia", level: "Native" },
+          { name: "English", level: "Advanced" },
+        ],
+        certifications: [
+          {
+            issuer: "Cisco",
+            name: "Cisco Certified Network Professional Routing and Switching",
+            credential_id: "CSCO12981208",
+            issue_date: "2023-10-15",
+            expired_date: "2028-10-01",
+            url: "https://cisco.com/cert/CSCO12981208",
+          },
+          {
+            issuer: "AWS",
+            name: "AWS Certified Solutions Architect – Associate",
+            credential_id: "AWS123456789",
+            issue_date: "2021-12-10",
+            expired_date: "2026-12-01",
+            url: "https://aws.amazon.com/certification/verify/AWS123456789",
+          },
+          {
+            issuer: "Google Cloud",
+            name: "Professional Cloud Architect",
+            credential_id: "GCP987654321",
+            issue_date: "2022-06-20",
+            expired_date: "2027-06-01",
+            url: "", 
+          },
+          {
+            issuer: "Microsoft",
+            name: "Microsoft Certified: Azure Administrator Associate",
+            credential_id: "MSFT55667788",
+            issue_date: "2021-03-05",
+            expired_date: "2026-03-01",
+            url: "https://learn.microsoft.com/certifications/MSFT55667788",
+          },
+          {
+            issuer: "CompTIA",
+            name: "CompTIA Security+",
+            credential_id: "COMPTIA12345",
+            issue_date: "2020-09-18",
+            expired_date: "2025-09-01",
+            url: "", 
+          },
+          {
+            issuer: "Oracle",
+            name: "Oracle Certified Professional, Java SE 11 Developer",
+            credential_id: "ORCL11223344",
+            issue_date: "2022-11-11",
+            expired_date: "2027-11-01",
+            url: "https://education.oracle.com/ORCL11223344",
+          },
+          {
+            issuer: "PMI",
+            name: "Project Management Professional (PMP)",
+            credential_id: "PMI44556677",
+            issue_date: "2021-07-07",
+            expired_date: "2026-07-01",
+            url: "", 
+          },
+          {
+            issuer: "Scrum.org",
+            name: "Professional Scrum Master I (PSM I)",
+            credential_id: "SCRUM112244",
+            issue_date: "2022-05-15",
+            expired_date: "2027-05-01",
+            url: "https://www.scrum.org/certificates/SCRUM112244",
+          },
+          {
+            issuer: "Linux Foundation",
+            name: "Certified Kubernetes Administrator (CKA)",
+            credential_id: "LFCKA778899",
+            issue_date: "2023-02-22",
+            expired_date: "2028-02-01",
+            url: "", 
+          },
+        ]
+      };
+      setData(dummy);
+      setLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
   }, []);
+
+  const formatDue = (dateStr: string) => {
+    if (!dateStr) return "-"
+    const date = new Date(dateStr)
+    return date.toLocaleDateString("en-US", { month: "short", year: "numeric" })
+  }
 
   const levelStyle = (level: string) => {
     switch (level) {
@@ -132,7 +172,7 @@ export default function SkillsPage() {
               <Blocks className="w-6 h-6" />
               <h2 className="text-lg font-semibold">Skills</h2>
             </div>
-            <button type="button" onClick={() => setOpen(true)}>
+            <button type="button" onClick={() => setOpenEditSkills(true)}>
               <Edit className="w-6 h-6" />
             </button>
           </div>
@@ -142,22 +182,20 @@ export default function SkillsPage() {
           </div>
 
           {/* Body */}
-          {data ? (
-            <div className="flex flex-col gap-4 mt-4">
+          {loading ? (
+            <div className="flex flex-col gap-6 mt-4">
               {/* Skills */}
               <div>
                 <span className="font-semibold block mb-2">Skills</span>
                 <div className="flex flex-wrap gap-2">
-                  {data.skills.map((s, idx) => {
-                    const style = levelStyle(s.level);
+                  {Array.from({ length: 10 }).map((_, i) => {
+                    const widths = ["w-40", "w-44", "w-48", "w-52", "w-56"];
+                    const randomW = widths[Math.floor(Math.random() * widths.length)];
                     return (
-                      <div
-                        key={idx}
-                        className={`px-3 py-1 rounded-2xl bg-white flex items-center shadow-md gap-2 border ${style.border}`}
-                      >
-                        <span className={`px-2 rounded-xl text-[10px]  ${style.badge}`}>{s.level}</span>
-                        <span className="text-sm text-gray-800">{s.name}</span>
-                      </div>
+                      <Skeleton
+                        key={`skill-${i}`}
+                        className={`h-7 ${randomW} rounded-2xl`}
+                      />
                     );
                   })}
                 </div>
@@ -167,24 +205,65 @@ export default function SkillsPage() {
               <div>
                 <span className="font-semibold block mb-2">Languages</span>
                 <div className="flex flex-wrap gap-2">
-                  {data.languages.map((l, idx) => {
-                    const style = levelStyle(l.level);
+                  {Array.from({ length: 3 }).map((_, i) => {
+                    const widths = ["w-40", "w-44", "w-48", "w-52", "w-56"];
+                    const randomW = widths[Math.floor(Math.random() * widths.length)];
                     return (
-                      <div
-                        key={idx}
-                        className={`px-3 py-1 rounded-2xl bg-white flex items-center shadow-md gap-2 border ${style.border}`}
-                      >
-                        <span className={`px-2 rounded-xl text-[10px] ${style.badge}`}>{l.level}</span>
-                        <span className="text-sm text-gray-800">{l.name}</span>
-                      </div>
+                      <Skeleton
+                        key={`lang-${i}`}
+                        className={`h-7 ${randomW} rounded-2xl`}
+                      />
                     );
                   })}
                 </div>
               </div>
             </div>
-
           ) : (
-            <p className="text-gray-400 text-sm mt-6">Loading...</p>
+            data && (
+              <div className="flex flex-col gap-4 mt-4">
+                {/* Skills */}
+                <div>
+                  <span className="font-semibold block mb-2">Skills</span>
+                  <div className="flex flex-wrap gap-2">
+                    {data.skills.map((s, idx) => {
+                      const style = levelStyle(s.level);
+                      return (
+                        <div
+                          key={idx}
+                          className={`px-3 py-1 rounded-2xl bg-white flex items-center shadow-md gap-2 border ${style.border}`}
+                        >
+                          <span className={`px-2 rounded-xl text-[10px] ${style.badge}`}>
+                            {s.level}
+                          </span>
+                          <span className="text-sm text-gray-800">{s.name}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Languages */}
+                <div>
+                  <span className="font-semibold block mb-2">Languages</span>
+                  <div className="flex flex-wrap gap-2">
+                    {data.languages.map((l, idx) => {
+                      const style = levelStyle(l.level);
+                      return (
+                        <div
+                          key={idx}
+                          className={`px-3 py-1 rounded-2xl bg-white flex items-center shadow-md gap-2 border ${style.border}`}
+                        >
+                          <span className={`px-2 rounded-xl text-[10px] ${style.badge}`}>
+                            {l.level}
+                          </span>
+                          <span className="text-sm text-gray-800">{l.name}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )
           )}
         </div>
       </div>
@@ -199,7 +278,7 @@ export default function SkillsPage() {
               <Award className="w-6 h-6" />
               <h2 className="text-lg font-semibold">Certificates</h2>
             </div>
-            <button type="button" onClick={() => setOpen(true)}>
+            <button type="button" onClick={() => setOpenAddCert(true)}>
               <Plus className="w-6 h-6" />
             </button>
           </div>
@@ -208,42 +287,80 @@ export default function SkillsPage() {
             Add your certifications to demonstrate verified skills and strengthen your profile.
           </div>
 
-          {data ? (
+          {loading ? (
             <div className="flex flex-wrap gap-2 mt-4">
-              {data.certifications.map((c, idx) => (
-                <div
-                  key={idx}
-                  className="px-4 py-2 rounded-2xl  bg-white border shadow-md border-gray-200 flex justify-between gap-3 text-sm min-w-[280px]"
-                >
-                  {/* Isi cert */}
-                  <div className="flex flex-col w-full space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[12px] text-white bg-[#004A5F] px-2 rounded-xl">{c.issuer}</span>
-                      {/* Edit button */}
-                      <button
-                        type="button"
-                        className="p-1 rounded-md hover:bg-gray-100"
-                        onClick={() => console.log("Edit", c.name)}
-                      >
-                        <Edit className="w-4 h-4" />
-                      </button>
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="font-semibold text-gray-900">{c.name}</span>
-                      <span className="text-xs">
-                        <span className="font-semibold text-[#004A5F]">{c.credential_id}</span>{" "}
-                        <span className="text-gray-600">(due {c.due})</span>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
+              {Array.from({ length: 12 }).map((_, i) => {
+                const widths = ["w-40", "w-44", "w-48", "w-52", "w-56"];
+                const randomW = widths[Math.floor(Math.random() * widths.length)];
+                return (
+                  <Skeleton
+                    key={i}
+                    className={`h-20 ${randomW} rounded-2xl`}
+                  />
+                );
+              })}
             </div>
           ) : (
-            <p className="text-gray-400 text-sm mt-6">Loading...</p>
+            data && (
+              <div className="flex flex-wrap gap-2 mt-4">
+                {data.certifications.map((c, idx) => (
+                  <div
+                    key={idx}
+                    className="px-4 py-2 rounded-2xl bg-white border shadow-md border-gray-200 flex justify-between gap-3 text-sm min-w-[280px]"
+                  >
+                    <div className="flex flex-col w-full space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[12px] text-white bg-[#004A5F] px-2 rounded-xl">
+                          {c.issuer}
+                        </span>
+                        <button
+                          type="button"
+                          className="p-1 rounded-md hover:bg-gray-100"
+                          onClick={() => {
+                            setSelectedCert(c)
+                            setOpenEditCert(true)
+                          }}
+                        >
+                          <Edit className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="font-semibold text-gray-900">{c.name}</span>
+                        <span className="text-xs">
+                          <span className="font-semibold text-[#004A5F]">{c.credential_id}</span>{" "}
+                          <span className="text-gray-600">(Due {formatDue(c.expired_date)})</span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )
           )}
         </div>
       </div>
+      {
+        data && (
+          <EditSkillsModal
+            open={openEditSkills}
+            onClose={() => setOpenEditSkills(false)}
+            initialSkills={data.skills}
+            initialLanguages={data.languages}
+            onSave={(skills, languages) => {
+              setData({ ...data, skills, languages });
+            }}
+          />
+        )
+      }
+      <AddCertificateModal
+        open={openAddCert}
+        onClose={() => setOpenAddCert(false)}
+      />
+      <EditCertificateModal
+        open={openEditCert}
+        onClose={() => setOpenEditCert(false)}
+        certificate={selectedCert}
+      />
     </div>
   );
 }

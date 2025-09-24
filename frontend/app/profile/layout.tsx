@@ -128,7 +128,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
         return () => clearTimeout(timer)
     }, [])
 
-    const mainRef = useRef<HTMLDivElement>(null)
+    // const mainRef = useRef<HTMLDivElement>(null)
 
     useLayoutEffect(() => {
         if (firstVisit) return
