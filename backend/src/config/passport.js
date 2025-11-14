@@ -1,13 +1,25 @@
-import linkedInStrategy from "passport-linkedin-oauth2";
-
-const passport = linkedInStrategy();
+import passport from "passport";
+import { Strategy as LinkedInStrategy } from "passport-linkedin-oauth2";
 
 passport.use(
-  new linkedInStrategy({
-    cliendID: LINKEDIN_KEY,
-    clientSecret: LINKEDIN_SECRET,
-    callbackURL: "http://localhost:3000/auth/linkedin/callback",
-    scope: ["r_emailaddress", "r_liteprofile"],
-    state: true,
-  })
+  new LinkedInStrategy(
+    {
+      clientID: process.env.LINKEDIN_CLIENT_ID,
+      clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
+      callbackURL: process.env.LINKEDIN_CALLBACK_URL,
+      scope: ["openid", "profile", "email"], // 🔥 ubah scope-nya juga
+      state: true,
+    },
+    (accessToken, refreshToken, profile, done) => {
+      // 🔥 FIX DI SINI
+      if (!profile.id && profile.sub) {
+        profile.id = profile.sub; // fallback ke sub
+      }
+
+      console.log("✅ LinkedIn profile:", profile);
+      done(null, profile);
+    }
+  )
 );
+
+export default passport;

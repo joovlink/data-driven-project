@@ -13,6 +13,11 @@ app.use(morgan("dev"));
 // Routes
 app.use("/api/auth", authRoutes);
 
+// Test route biar gak "Cannot GET /"
+app.get("/", (req, res) => {
+  res.send("🚀 API is running... use /api/auth for authentication endpoints");
+});
+
 // // 404 & error handler
 // app.use(notFound);
 // app.use(errorHandler);
