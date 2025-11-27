@@ -1,52 +1,55 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
 const profileSchema = new mongoose.Schema(
   {
-    fullName: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    bornPlace: {
-      type: String,
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
-    bornDate: {
-      type: Date,
-      required: true,
-    },
-    shortProfile: {
-      type: String,
-    },
+
+    // 🧍 General Information
+    firstName: { type: String, required: true, trim: true },
+    middleName: { type: String, trim: true },
+    lastName: { type: String, trim: true },
+    birthDate: { type: Date },
     phoneNumber: {
       type: String,
-      required: true,
       validate: {
-        validator: function (num) {
-          return /^\+62\d{8,13}$/.test(num)
-        },
+        validator: (num) => /^\+62\d{8,13}$/.test(num),
         message: (props) => `${props.value} bukan nomor telepon yang valid!`,
       },
     },
-    workingExperience: [
+    country: { type: String },
+    province: { type: String },
+    city: { type: String },
+    shortDesc: { type: String },
+
+    // 💼 Work Experience
+    experience: [
       {
-        position: String,
-        company: String,
-        startYear: Date,
-        endYear: Date,
-        description: String,
+        jobName: String,
+        companyName: String,
+        startDate: Date,
+        endDate: Date,
+        shortDesc: String,
         _id: false,
       },
     ],
+
+    // 🎓 Education
     education: [
       {
-        institution: String,
-        major: String,
-        level: String,
-        gradYear: Date,
+        qualification: String,
+        institutionName: String,
+        startYear: Date,
+        expectedFinishDate: Date,
+        shortDesc: String,
         _id: false,
       },
     ],
+
+    // 🧾 Certification
     certification: [
       {
         name: String,
@@ -55,17 +58,32 @@ const profileSchema = new mongoose.Schema(
         _id: false,
       },
     ],
+
+    // 🧠 Skills (dengan level)
     skills: {
-      hardSkill: [String],
-      softSkill: [String],
+      hardSkill: [
+        {
+          name: String,
+          level: {
+            type: String,
+            enum: ["Beginner", "Intermediate", "Advanced", "Expert"],
+          },
+          _id: false,
+        },
+      ],
+      softSkill: [
+        {
+          name: String,
+          level: {
+            type: String,
+            enum: ["Beginner", "Intermediate", "Advanced", "Expert"],
+          },
+          _id: false,
+        },
+      ],
     },
-    portfolio: [
-      {
-        projectName: String,
-        link: String,
-        _id: false,
-      },
-    ],
+
+    // 🌐 Languages
     languages: [
       {
         language: String,
@@ -76,10 +94,18 @@ const profileSchema = new mongoose.Schema(
         _id: false,
       },
     ],
+
+    // 📂 Portfolio
+    portfolio: [
+      {
+        projectName: String,
+        link: String,
+        _id: false,
+      },
+    ],
   },
   { timestamps: true }
-)
+);
 
-const Profile = mongoose.model("Profile", profileSchema)
-
-export default Profile
+const Profile = mongoose.model("Profile", profileSchema);
+export default Profile;

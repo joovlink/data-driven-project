@@ -1,6 +1,6 @@
-import mongoose from "mongoose"
-import bcrypt from "bcrypt"
-import crypto from "crypto"
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+import crypto from "crypto";
 
 const userSchema = new mongoose.Schema(
   {
@@ -13,103 +13,100 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, "Password is required"],
       minlength: [8, "Password must be at least 8 characters"],
+      required: function () {
+        // password wajib hanya kalau bukan akun OAuth
+        return !this.googleId && !this.linkedinId;
+      },
       validate: {
         validator: function (value) {
-          const hasUpper = /[A-Z]/.test(value)
-          const hasLower = /[a-z]/.test(value)
-          const hasNumber = /\d/.test(value)
-          const hasSymbol = /[\W_]/.test(value)
-          return hasUpper && hasLower && hasNumber && hasSymbol
+          if (!value) return true; // skip validasi kalau OAuth
+          const hasUpper = /[A-Z]/.test(value);
+          const hasLower = /[a-z]/.test(value);
+          const hasNumber = /\d/.test(value);
+          const hasSymbol = /[\W_]/.test(value);
+          return hasUpper && hasLower && hasNumber && hasSymbol;
         },
         message:
           "Password must include uppercase, lowercase, number, and special character",
       },
     },
 
-    isVerified: {
-      type: Boolean,
-      default: false,
-    },
-    verifyToken: {
-      type: String,
-      default: null,
-    },
-    verifyTokenExpires: {
-      type: Date,
-      default: null,
-    },
+    // 🌍 OAuth IDs
+    googleId: { type: String, unique: true, sparse: true },
+    linkedinId: { type: String, unique: true, sparse: true },
 
-    resetPasswordToken: {
-      type: String,
-      default: null,
-    },
-    resetPasswordExpires: {
-      type: Date,
-      default: null,
-    },
+    // 🖼 Foto profil
+    picture: { type: String },
 
-    lastLogin: {
-      type: Date,
-      default: null,
-    },
+    // ✅ Email Verification
+    isVerified: { type: Boolean, default: false },
+    verifyToken: { type: String, default: null },
+    verifyTokenExpires: { type: Date, default: null },
+
+    // 🔄 Reset Password
+    resetPasswordToken: { type: String, default: null },
+    resetPasswordExpires: { type: Date, default: null },
+
+    // 📅 Tracking login
+    lastLogin: { type: Date, default: null },
   },
   { timestamps: true }
-)
+);
 
-// 🛠 Index untuk email unik (opsional, redundant jika sudah pakai unique: true di schema field)
-userSchema.index({ email: 1 }, { unique: true })
-
-// 🔒 Pre-save: hash password jika berubah
+// 🔐 Hash password sebelum save
 userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next()
+  if (!this.isModified("password")) return next();
   try {
-    const salt = await bcrypt.genSalt(10)
-    this.password = await bcrypt.hash(this.password, salt)
-    next()
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
   } catch (err) {
-    next(err)
+    next(err);
   }
-})
+});
 
-// ✅ Method: cocokkan password login
+// 🧩 Compare password login
 userSchema.methods.matchPassword = async function (enteredPassword) {
-  return bcrypt.compare(enteredPassword, this.password)
-}
+  return bcrypt.compare(enteredPassword, this.password);
+};
 
-// ✅ Method: generate verification token
+// ✅ Token verifikasi email
 userSchema.methods.generateVerifyToken = function () {
-  const token = crypto.randomBytes(32).toString("hex")
-  this.verifyToken = token
-  this.verifyTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 jam
-  return token
-}
+  const token = crypto.randomBytes(20).toString("hex");
+  this.verifyToken = crypto.createHash("sha256").update(token).digest("hex");
+  this.verifyTokenExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 jam
+  return token;
+};
 
-// ✅ Method: generate reset password token
-userSchema.methods.generateResetPasswordToken = function () {
-  const token = crypto.randomBytes(32).toString("hex")
-  this.resetPasswordToken = token
-  this.resetPasswordExpires = new Date(Date.now() + 120 * 60 * 1000) // 120 menit
-  return token
-}
-
-// ✅ Method: tandai email sudah diverifikasi
+//markVerified pas ada verifikasi
 userSchema.methods.markVerified = function () {
-  this.isVerified = true
-}
+  (this.isVerified = true),
+    (this.verifyToken = undefined),
+    (this.verifyTokenExpires = undefined);
+};
 
+// 🔁 Token reset password
+userSchema.methods.generateResetPasswordToken = function () {
+  const token = crypto.randomBytes(20).toString("hex");
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(token)
+    .digest("hex");
+  this.resetPasswordExpires = Date.now() + 60 * 60 * 1000; // 1 jam
+  return token;
+};
 
+// 🧹 Remove sensitive data pas return JSON
 userSchema.methods.toJSON = function () {
-  const obj = this.toObject({ versionKey: false })
-  delete obj.password
-  delete obj.verifyToken
-  delete obj.verifyTokenExpires
-  delete obj.resetPasswordToken
-  delete obj.resetPasswordExpires
-  return obj
-}
+  const obj = this.toObject({ versionKey: false });
+  delete obj.password;
+  delete obj.verifyToken;
+  delete obj.verifyTokenExpires;
+  delete obj.resetPasswordToken;
+  delete obj.resetPasswordExpires;
+  return obj;
+};
 
-// ⛓ Export model
-const User = mongoose.model("User", userSchema)
-export default User
+const User = mongoose.model("User", userSchema);
+export default User;

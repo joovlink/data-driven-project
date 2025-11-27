@@ -1,23 +1,33 @@
-import express from "express"
+import express from "express";
 import {
   registerUser,
   loginUser,
   verifyEmail,
   forgotPassword,
   resetPassword,
-  resendVerification,
-  resendVerificationByToken
-} from "../controllers/auth.controller.js"
+  googleCallback,
+  googleLogin,
+  linkedinLogin,
+  linkedinCallback,
+} from "../controllers/auth.controller.js";
 
-const router = express.Router()
+const router = express.Router();
 
-router.post("/register", registerUser)
-router.post("/login", loginUser)
-router.get("/verify", verifyEmail)
-router.post("/forgot-password", forgotPassword) 
-router.post("/reset-password", resetPassword) 
-router.post("/resend-verification", resendVerification);
-router.post("/resend-verification-by-token", resendVerificationByToken);
+// 🧩 Auth basics
+router.post("/register", registerUser);
+router.post("/login", loginUser);
+router.get("/verify", verifyEmail);
 
+// 🔁 Password recovery
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password", resetPassword); // pakai token dari body (bukan param)
 
-export default router
+// 🌐 OAuth Google
+router.get("/google", googleLogin);
+router.get("/google/callback", googleCallback);
+
+// 🌐 OAuth LinkedIn
+router.get("/linkedin", linkedinLogin);
+router.get("/linkedin/callback", linkedinCallback);
+
+export default router;
